@@ -1,0 +1,8 @@
+{
+  "name": "9jacash",
+  "description": "A comprehensive financial dashboard for managing transactions, savings, and payments.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

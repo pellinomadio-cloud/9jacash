@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="192" height="192">
+  <defs>
+    <radialGradient id="chix9ja-bgGrad" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#04281a"/>
+      <stop offset="45%" stop-color="#01150c"/>
+      <stop offset="100%" stop-color="#000704"/>
+    </radialGradient>
+
+    <linearGradient id="chix9ja-goldBevel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF8D6"/>
+      <stop offset="25%" stop-color="#F7CE5A"/>
+      <stop offset="50%" stop-color="#B8861B"/>
+      <stop offset="75%" stop-color="#FEE89D"/>
+      <stop offset="100%" stop-color="#664104"/>
+    </linearGradient>
+
+    <linearGradient id="chix9ja-emeraldNeon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00FFA3"/>
+      <stop offset="50%" stop-color="#00B865"/>
+      <stop offset="100%" stop-color="#004D25"/>
+    </linearGradient>
+
+    <linearGradient id="chix9ja-naira3D" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="20%" stop-color="#FEF08A"/>
+      <stop offset="50%" stop-color="#FACC15"/>
+      <stop offset="80%" stop-color="#CA8A04"/>
+      <stop offset="100%" stop-color="#713F12"/>
+    </linearGradient>
+
+    <linearGradient id="chix9ja-bannerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#854D0E"/>
+      <stop offset="25%" stop-color="#EAB308"/>
+      <stop offset="50%" stop-color="#FEF08A"/>
+      <stop offset="75%" stop-color="#EAB308"/>
+      <stop offset="100%" stop-color="#854D0E"/>
+    </linearGradient>
+
+    <filter id="chix9ja-shadowGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.9"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#00FFA3" flood-opacity="0.3"/>
+    </filter>
+
+    <filter id="chix9ja-nairaShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.85"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#FDE047" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <rect x="20" y="20" width="472" height="472" rx="112" fill="url(#chix9ja-bgGrad)" stroke="url(#chix9ja-goldBevel)" stroke-width="12" filter="url(#chix9ja-shadowGlow)"/>
+  <rect x="40" y="40" width="432" height="432" rx="96" fill="none" stroke="url(#chix9ja-emeraldNeon)" stroke-width="3" opacity="0.85"/>
+
+  <path d="M 68 104 L 68 68 L 104 68" fill="none" stroke="#FDE047" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 444 104 L 444 68 L 408 68" fill="none" stroke="#FDE047" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 68 408 L 68 444 L 104 444" fill="none" stroke="#FDE047" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 444 408 L 444 444 L 408 444" fill="none" stroke="#FDE047" stroke-width="4" stroke-linecap="round"/>
+
+  <circle cx="256" cy="226" r="148" fill="none" stroke="url(#chix9ja-goldBevel)" stroke-width="2" stroke-dasharray="8 8" opacity="0.6"/>
+  <circle cx="256" cy="226" r="126" fill="#011a10" stroke="url(#chix9ja-emeraldNeon)" stroke-width="2.5" opacity="0.9"/>
+
+  <g transform="translate(256, 120)">
+    <path d="M 0 -36 L 20 -8 L 42 -26 L 28 8 L -28 8 L -42 -26 L -20 -8 Z" fill="url(#chix9ja-goldBevel)" stroke="#FFFBEB" stroke-width="1.5"/>
+    <circle cx="0" cy="-40" r="5" fill="#00FFA3"/>
+    <circle cx="-42" cy="-30" r="4" fill="#00FFA3"/>
+    <circle cx="42" cy="-30" r="4" fill="#00FFA3"/>
+  </g>
+
+  <g filter="url(#chix9ja-nairaShadow)">
+    <text x="256" y="276" 
+          font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" 
+          font-weight="900" 
+          font-size="182" 
+          fill="url(#chix9ja-naira3D)" 
+          stroke="#3f1f04" 
+          stroke-width="5" 
+          paint-order="stroke fill" 
+          text-anchor="middle" 
+          dominant-baseline="middle">₦</text>
+  </g>
+
+  <path d="M 148 226 L 155 212 L 169 226 L 155 240 Z" fill="#FDE047" opacity="0.9"/>
+  <circle cx="155" cy="226" r="2.5" fill="#FFFFFF"/>
+  <path d="M 364 226 L 357 212 L 343 226 L 357 240 Z" fill="#FDE047" opacity="0.9"/>
+  <circle cx="357" cy="226" r="2.5" fill="#FFFFFF"/>
+
+  <g transform="translate(0, 396)">
+    <path d="M 120 18 L 138 -6 L 374 -6 L 392 18 L 368 40 L 144 40 Z" fill="#000000" opacity="0.7"/>
+    <path d="M 124 16 L 140 -4 L 372 -4 L 388 16 L 364 36 L 148 36 Z" fill="url(#chix9ja-bannerGrad)" stroke="#FFFBEB" stroke-width="2"/>
+    <path d="M 134 16 L 146 2 L 366 2 L 378 16 L 360 30 L 152 30 Z" fill="#0B1D14" stroke="url(#chix9ja-emeraldNeon)" stroke-width="1.5"/>
+
+    <text x="256" y="19" 
+          font-family="system-ui, -apple-system, 'Arial Black', sans-serif" 
+          font-weight="950" 
+          font-size="21" 
+          letter-spacing="5" 
+          fill="url(#chix9ja-goldBevel)" 
+          text-anchor="middle" 
+          dominant-baseline="middle">CHIX9JA</text>
+  </g>
+
+  <g transform="translate(416, 416)">
+    <circle cx="0" cy="0" r="32" fill="#000000" stroke="url(#chix9ja-goldBevel)" stroke-width="3"/>
+    <circle cx="0" cy="0" r="27" fill="#00C853"/>
+    <path d="M -10 1 L -3 8 L 11 -6" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
