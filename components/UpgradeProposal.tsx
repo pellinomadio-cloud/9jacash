@@ -188,160 +188,8 @@ const UpgradeProposal: React.FC<UpgradeProposalProps> = ({
     },
   ];
 
-  // SCENARIO 1: USER NOT SUBSCRIBED
-  if (!isSubscribed) {
-    return (
-      <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-6 pb-24">
-        <div className="max-w-md mx-auto space-y-6 animate-in fade-in duration-300">
-          
-          {/* Header Bar */}
-          <div className="flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-2xl p-4 shadow-lg">
-            <button
-              type="button"
-              onClick={onBack}
-              className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 flex items-center justify-center text-zinc-200 transition-all active:scale-95"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <div className="text-center">
-              <h1 className="text-lg font-black text-white uppercase tracking-tight">
-                Chix9ja VIP Hub
-              </h1>
-              <p className="text-[10px] font-bold text-amber-400 tracking-wider uppercase font-mono">
-                Premium Financial Privileges
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-              <Crown size={20} className="fill-amber-500" />
-            </div>
-          </div>
-
-          {/* Hero Banner with Encouraging Message */}
-          <div className="bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-500 rounded-3xl p-6 text-black shadow-xl shadow-amber-300/20 border border-amber-300/40 relative overflow-hidden space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-14 h-14 bg-black/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-black border border-black/10 shrink-0">
-                <Sparkles size={32} fill="currentColor" />
-              </div>
-              <div>
-                <span className="px-3 py-0.5 bg-black text-amber-400 rounded-full text-[9px] font-black uppercase tracking-widest inline-block mb-1">
-                  High Payout & Premium Services
-                </span>
-                <h2 className="text-xl font-black text-black tracking-tight uppercase leading-tight">
-                  Welcome to Chix9ja VIP
-                </h2>
-              </div>
-            </div>
-
-            <p className="text-xs font-semibold text-amber-950 leading-relaxed bg-black/5 p-3.5 rounded-2xl border border-black/10">
-              🌟 <strong className="text-black">High Payout Guarantee:</strong> Chix9ja delivers Nigeria’s highest return yields, rapid payout processing, and instant node transfers. Subscribe today to unlock total financial freedom!
-            </p>
-          </div>
-
-          {/* Key Chix9ja Benefits List */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 shadow-xl space-y-4">
-            <div className="flex items-center space-x-2 border-b border-zinc-800 pb-3">
-              <Award className="text-amber-400" size={20} />
-              <h3 className="text-sm font-black uppercase tracking-wider text-white">
-                Why Chix9ja Premium Services?
-              </h3>
-            </div>
-
-            <div className="space-y-3.5">
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
-                  <TrendingUp size={18} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black text-white uppercase tracking-wide">
-                    Industry Highest Payouts
-                  </h4>
-                  <p className="text-[11px] text-zinc-400 font-medium leading-relaxed">
-                    Earn up to 100% daily returns on task rewards, crypto trading, and VIP node investments.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
-                  <Zap size={18} fill="currentColor" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black text-white uppercase tracking-wide">
-                    Instant Bank Settlements
-                  </h4>
-                  <p className="text-[11px] text-zinc-400 font-medium leading-relaxed">
-                    Direct integration with CBN-approved banking rails ensures zero transaction loss and lightning-fast payouts.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
-                  <ShieldCheck size={18} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black text-white uppercase tracking-wide">
-                    24/7 Priority VIP Node Access
-                  </h4>
-                  <p className="text-[11px] text-zinc-400 font-medium leading-relaxed">
-                    VIP node members receive ₦1,000,000 Business Fund allocation & zero pending delay options.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
-                  <Crown size={18} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black text-white uppercase tracking-wide">
-                    Exclusive Member Signals & Lounge
-                  </h4>
-                  <p className="text-[11px] text-zinc-400 font-medium leading-relaxed">
-                    Gain direct access to certified trading broadcasts and daily administrative alerts.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Encouraging Subscription Banner */}
-          <div className="bg-zinc-900 border border-amber-500/30 rounded-3xl p-5 text-center space-y-3">
-            <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider">
-              Ready to start receiving high payouts?
-            </h4>
-            <p className="text-[11px] font-semibold text-zinc-300 leading-relaxed">
-              Activate your subscription now to start withdrawing funds, unlocking VIP cashout acceleration, and enjoying premium Chix9ja services!
-            </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="space-y-3 pt-2">
-            <button
-              type="button"
-              onClick={onGoToSubscribe || onBack}
-              className="w-full py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-black font-extrabold rounded-2xl shadow-xl shadow-amber-300/60 transition-all active:scale-95 uppercase tracking-wider text-xs flex items-center justify-center space-x-2"
-            >
-              <span>Activate Subscription Now</span>
-              <ArrowRight size={18} />
-            </button>
-
-            <button
-              type="button"
-              onClick={onBack}
-              className="w-full py-3 text-zinc-400 font-bold uppercase tracking-wider text-xs hover:text-white transition-colors"
-            >
-              Back to Dashboard
-            </button>
-          </div>
-
-        </div>
-      </div>
-    );
-  }
-
-  // SCENARIO 2: USER IS SUBSCRIBED BUT HAS NO PENDING WITHDRAWALS (AND IS NOT VIP / SHOW PREVIEW)
-  if (isSubscribed && !hasPendingWithdrawal && !user?.isVIP && !isVip2Active && !showPreviewAnyway) {
+  // SCENARIO: USER HAS NO PENDING WITHDRAWALS (AND IS NOT VIP / SHOW PREVIEW)
+  if (!hasPendingWithdrawal && !user?.isVIP && !isVip2Active && !showPreviewAnyway) {
     return (
       <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-6 pb-24">
         <div className="max-w-md mx-auto space-y-6 animate-in fade-in duration-300">
@@ -360,7 +208,7 @@ const UpgradeProposal: React.FC<UpgradeProposalProps> = ({
                 VIP Cashout Accelerator
               </h1>
               <p className="text-[10px] font-bold text-amber-400 tracking-wider uppercase font-mono">
-                Chix9ja Subscribed Privilege
+                9jacash VIP Privilege
               </p>
             </div>
             <div className="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
@@ -375,7 +223,7 @@ const UpgradeProposal: React.FC<UpgradeProposalProps> = ({
             </div>
             <div>
               <span className="px-3 py-0.5 bg-black text-amber-400 rounded-full text-[9px] font-black uppercase tracking-widest inline-block mb-1">
-                Subscribed Account Active
+                9jacash Account Active
               </span>
               <h2 className="text-xl font-black text-black tracking-tight uppercase">
                 No Pending Withdrawals
@@ -478,7 +326,7 @@ const UpgradeProposal: React.FC<UpgradeProposalProps> = ({
               VIP Membership Tiers
             </h1>
             <p className="text-[10px] font-bold text-amber-400 tracking-wider uppercase font-mono">
-              Chix9ja Cashout Accelerator
+              9jacash Cashout Accelerator
             </p>
           </div>
           <div className="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">

@@ -52,26 +52,20 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onBack, onPlayQuiz, onSubscribe
             </button>
           </div>
 
-          {/* Step 2: Subscribe */}
+          {/* Step 2: Instant Rewards */}
           <div className="bg-gray-900 border border-white/5 rounded-3xl p-6 flex flex-col space-y-4">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500">
+              <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400">
                 <Icons.CheckCircle size={24} />
               </div>
               <div>
-                <h4 className="text-white font-bold uppercase text-sm tracking-tight">2. Get Subscribed</h4>
-                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-none">Unlock Withdrawals</p>
+                <h4 className="text-white font-bold uppercase text-sm tracking-tight">2. Earn & Grow</h4>
+                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-none">Daily Cash Bonuses</p>
               </div>
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">
-              To maintain a secure network, withdrawals are enabled for <span className="text-green-glow font-bold">subscribed members only</span>. Choose a plan that fits your goals.
+              Earn from welcome bonuses, quiz wins, tasks, and daily check-ins directly into your 9jacash wallet balance.
             </p>
-            <button 
-                onClick={onSubscribe}
-                className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl text-xs uppercase tracking-widest active:scale-95 transition-all"
-            >
-                View Plans
-            </button>
           </div>
 
           {/* Step 3: Withdraw */}
@@ -86,14 +80,14 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onBack, onPlayQuiz, onSubscribe
               </div>
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">
-              Once you earn enough and are on a valid plan, you can move your funds to <span className="text-white font-bold">any commercial bank</span> in Nigeria within seconds.
+              Withdraw your funds anytime directly to <span className="text-white font-bold">any commercial bank</span> in Nigeria with zero withdrawal subscription required.
             </p>
           </div>
         </div>
 
         <div className="bg-green-glow/5 border border-green-glow/10 p-5 rounded-3xl text-center space-y-2">
             <Icons.ShieldCheck size={20} className="text-green-glow mx-auto" />
-            <p className="text-xs text-gray-300 font-medium">Verified by chix9ja Secure Protocol</p>
+            <p className="text-xs text-gray-300 font-medium">Verified by 9jacash Secure Protocol</p>
             <p className="text-[10px] text-gray-500 px-4">Our platform uses advanced encryption to ensure every transaction is fast, secure and reliable.</p>
         </div>
       </div>

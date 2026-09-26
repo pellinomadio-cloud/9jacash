@@ -272,7 +272,7 @@ const App: React.FC = () => {
               {
                 id: "trx-init",
                 type: "credit",
-                amount: 10000,
+                amount: 43000,
                 description: "Welcome Bonus",
                 date: new Date().toISOString(),
                 status: "success",
@@ -317,6 +317,13 @@ const App: React.FC = () => {
           if (!storedUser.referredUsers) {
             storedUser.referredUsers = [];
           }
+          // If user only had 0 or old 10,000 bonus with 0 or 1 transaction, upgrade to 43,000 welcome bonus
+          if (storedUser.balance === 0 || storedUser.balance === 10000) {
+            storedUser.balance = 43000;
+            if (storedUser.transactions?.[0] && storedUser.transactions[0].description === "Welcome Bonus") {
+              storedUser.transactions[0].amount = 43000;
+            }
+          }
           // Save migrations immediately
           users[activeEmail.toLowerCase()] = storedUser;
           localStorage.setItem("chix9ja_users", JSON.stringify(users));
@@ -329,13 +336,13 @@ const App: React.FC = () => {
     }
     const defaultUser: User = {
       name: "Pellino",
-      email: "pellino@chix9ja.com",
-      balance: 0,
+      email: "pellino@9jacash.com",
+      balance: 43000,
       transactions: [
         {
           id: "trx-bonus-init",
           type: "credit",
-          amount: 10000,
+          amount: 43000,
           description: "Welcome Bonus",
           date: new Date().toISOString(),
           status: "success",
@@ -349,9 +356,9 @@ const App: React.FC = () => {
     };
     try {
       const users = getStoredUsers();
-      users["pellino@chix9ja.com"] = defaultUser;
+      users["pellino@9jacash.com"] = defaultUser;
       localStorage.setItem("chix9ja_users", JSON.stringify(users));
-      localStorage.setItem("chix9ja_active_session", "pellino@chix9ja.com");
+      localStorage.setItem("chix9ja_active_session", "pellino@9jacash.com");
     } catch {}
     return defaultUser;
   });
@@ -636,8 +643,6 @@ const App: React.FC = () => {
   const [showVipNotice, setShowVipNotice] = useState(false);
   const [showWithdrawReferralAdvert, setShowWithdrawReferralAdvert] =
     useState(false);
-  const [showWithdrawFailedPopup, setShowWithdrawFailedPopup] =
-    useState(false);
   const [showActiveSubscriptionNotice, setShowActiveSubscriptionNotice] =
     useState(false);
   const [showSupportMenu, setShowSupportMenu] = useState(false);
@@ -655,14 +660,6 @@ const App: React.FC = () => {
     if (user?.isSubscribed && (activeTab === "subscribe" || activeTab === "subscribe_payment")) {
       setActiveTab("home");
       setShowActiveSubscriptionNotice(true);
-    }
-  }, [activeTab, user?.isSubscribed]);
-
-  // Guard: unsubscribed member cannot open or remain on send_money or link_withdraw_account
-  useEffect(() => {
-    if ((!user || !user.isSubscribed) && (activeTab === "send_money" || activeTab === "link_withdraw_account")) {
-      setActiveTab("home");
-      setShowWithdrawFailedPopup(true);
     }
   }, [activeTab, user?.isSubscribed]);
 
@@ -797,7 +794,7 @@ const App: React.FC = () => {
               {
                 parts: [
                   {
-                    text: "Say cheerfully: welcome to 9jacash, kindly note that you can now join the 9jacash official partnership program to earn high recurring commissions, click the rewards button to earn daily rewards, you can withdraw to any bank as long as you are subscribed, thanks for joining 9jacash",
+                    text: "Say cheerfully: welcome to 9jacash, kindly note that you can now join the 9jacash official partnership program to earn high recurring commissions, click the rewards button to earn daily rewards, and withdraw directly to your bank account anytime, thanks for joining 9jacash",
                   },
                 ],
               },
@@ -930,7 +927,7 @@ const App: React.FC = () => {
     email: string,
     referredBy?: string,
   ) => {
-    const defaultWelcomeBonus = 10000.0;
+    const defaultWelcomeBonus = 43000.0;
     const referralJoinedBonus = 2500.0;
 
     // 1. Prepare transactions list for the referee
@@ -1150,11 +1147,7 @@ const App: React.FC = () => {
     } else if (id === "upgrade") {
       setActiveTab("upgrade_proposal");
     } else if (id === "bank") {
-      if (!user || !user.isSubscribed) {
-        setShowWithdrawFailedPopup(true);
-      } else {
-        setActiveTab("send_money");
-      }
+      setActiveTab("send_money");
     } else if (id === "quiz_game") {
       setTaskMode("quiz");
       setActiveTab("task_dashboard");
@@ -1966,11 +1959,7 @@ const App: React.FC = () => {
                 user={user!}
                 onUpdateProfile={handleUpdateProfile}
                 onLinkAccountClick={() => {
-                  if (!user || !user.isSubscribed) {
-                    setShowWithdrawFailedPopup(true);
-                  } else {
-                    setActiveTab("link_withdraw_account");
-                  }
+                  setActiveTab("link_withdraw_account");
                 }}
                 darkMode={darkMode}
                 toggleDarkMode={toggleDarkMode}
@@ -2029,11 +2018,7 @@ const App: React.FC = () => {
                 }}
                 onGoToSubscribe={handleGoToSubscribe}
                 onGoToWithdraw={() => {
-                  if (!user || !user.isSubscribed) {
-                    setShowWithdrawFailedPopup(true);
-                  } else {
-                    setActiveTab("send_money");
-                  }
+                  setActiveTab("send_money");
                 }}
                 onBack={handleBack}
               />
@@ -2102,11 +2087,8 @@ const App: React.FC = () => {
                     ? undefined
                     : () => setActiveTab("upgrade_proposal")
                 }
-                onGoHome={(showFailedMessage) => {
+                onGoHome={() => {
                   setActiveTab("home");
-                  if (showFailedMessage === true) {
-                    setShowWithdrawFailedPopup(true);
-                  }
                 }}
                 onRequestFreeWithdrawal={() =>
                   setShowWithdrawReferralAdvert(true)
@@ -2189,7 +2171,8 @@ const App: React.FC = () => {
                       isVIP={user?.isVIP}
                       subscriptionPlan={user?.subscriptionPlan}
                       onAdminClick={() => setActiveTab("admin")}
-                      onHistoryClick={() => setActiveTab("transaction_history")}
+                      onWithdrawClick={() => setActiveTab("send_money")}
+                      onHistoryClick={() => setActiveTab("send_money")}
                       onDepositClick={() => setActiveTab("deposit")}
                     />
                   </div>
@@ -2422,64 +2405,7 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
-          {showWithdrawFailedPopup && (
-            <div className="fixed inset-0 z-[260] flex items-center justify-center px-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-300">
-              <div className="bg-gradient-to-b from-zinc-900 via-zinc-950 to-black border border-amber-500/40 rounded-3xl p-6 w-full max-w-sm text-center space-y-4 shadow-[0_0_50px_rgba(245,158,11,0.25)] relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
-                
-                <div className="flex justify-center">
-                  <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-                    <Icons.Lock size={30} className="text-amber-400" />
-                  </div>
-                </div>
 
-                <div className="space-y-1.5">
-                  <span className="px-3 py-0.5 bg-amber-500/20 text-amber-300 font-black text-[10px] rounded-full uppercase tracking-wider border border-amber-500/30">
-                    SUBSCRIPTION REQUIRED
-                  </span>
-                  <h3 className="text-lg font-black text-white tracking-tight">
-                    Withdrawal Gateway Locked
-                  </h3>
-                  <p className="text-xs text-zinc-300 leading-relaxed font-medium">
-                    A valid subscription plan is strictly required to perform withdrawals from your 9jacash wallet to your bank account.
-                  </p>
-                </div>
-
-                <div className="bg-black/60 p-3.5 rounded-2xl border border-zinc-800 text-left space-y-2">
-                  <div className="flex items-center space-x-2 text-[11px] text-zinc-300 font-medium">
-                    <Icons.CheckCircle size={14} className="text-emerald-400 flex-shrink-0" />
-                    <span>Instant automated transfer to any Nigerian bank</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-[11px] text-zinc-300 font-medium">
-                    <Icons.CheckCircle size={14} className="text-emerald-400 flex-shrink-0" />
-                    <span>Zero withdrawal processing delay or queue</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-[11px] text-zinc-300 font-medium">
-                    <Icons.CheckCircle size={14} className="text-emerald-400 flex-shrink-0" />
-                    <span>Full access to wallet payouts & trading</span>
-                  </div>
-                </div>
-
-                <div className="pt-1 space-y-2">
-                  <button
-                    onClick={() => {
-                      setShowWithdrawFailedPopup(false);
-                      handleGoToSubscribe();
-                    }}
-                    className="w-full py-3.5 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-300 text-black font-black rounded-xl text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all active:scale-95 cursor-pointer"
-                  >
-                    Subscribe Now to Unlock
-                  </button>
-                  <button
-                    onClick={() => setShowWithdrawFailedPopup(false)}
-                    className="w-full py-2.5 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-400 hover:text-white font-bold rounded-xl text-xs transition-all border border-zinc-800 cursor-pointer"
-                  >
-                    Maybe Later
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
           {showActiveSubscriptionNotice && (
             <div className="fixed inset-0 z-[280] flex items-center justify-center px-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-300">
               <div className="bg-gradient-to-b from-gray-900 via-gray-950 to-black border border-emerald-500/40 rounded-3xl p-6 w-full max-w-sm text-center space-y-4 shadow-[0_0_50px_rgba(16,185,129,0.25)] relative overflow-hidden">

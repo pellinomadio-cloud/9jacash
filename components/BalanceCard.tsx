@@ -8,12 +8,14 @@ interface BalanceCardProps {
   subscriptionPlan?: string;
   onAdminClick?: () => void;
   onHistoryClick?: () => void;
+  onWithdrawClick?: () => void;
   onDepositClick?: () => void;
 }
 
 const BalanceCard: React.FC<BalanceCardProps> = ({ 
   balance = 0, 
-  onHistoryClick, 
+  onHistoryClick,
+  onWithdrawClick, 
   onDepositClick 
 }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -108,16 +110,16 @@ const BalanceCard: React.FC<BalanceCardProps> = ({
           {/* Vertical Divider */}
           <div className="w-[1px] h-6 bg-slate-200 mx-2"></div>
 
-          {/* Transaction History Button */}
+          {/* Withdraw Button */}
           <button 
-            onClick={onHistoryClick}
+            onClick={onWithdrawClick || onHistoryClick}
             className="flex-1 flex items-center justify-center space-x-2 hover:opacity-80 transition-opacity cursor-pointer group py-0.5"
           >
-            <div className="w-8 h-8 rounded-full bg-[#d97706] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform shrink-0">
-              <Icons.Repeat size={16} strokeWidth={2.5} />
+            <div className="w-8 h-8 rounded-full bg-[#008751] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform shrink-0">
+              <Icons.ArrowDownLeft size={17} strokeWidth={2.5} />
             </div>
             <span className="font-bold text-slate-900 text-sm tracking-tight whitespace-nowrap">
-              Transaction History
+              Withdraw
             </span>
           </button>
         </div>

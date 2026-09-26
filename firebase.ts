@@ -415,12 +415,12 @@ export const signInWithEmailAndPassword = async (authInstance: any, email: strin
     const newUser: User = {
       name: 'Pellino',
       email: emailKey,
-      balance: 0,
+      balance: 43000,
       transactions: [
         {
           id: `trx_init_${Date.now()}`,
           type: 'credit',
-          amount: 10000,
+          amount: 43000,
           description: 'Welcome Bonus',
           date: new Date().toISOString(),
           status: 'success'

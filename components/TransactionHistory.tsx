@@ -123,27 +123,13 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ user, onTransac
                     </div>
                 )})
             ) : (
-                !user.isSubscribed && (
-                     <div className="p-8 text-center">
-                        <p className="text-sm text-gray-500">No transactions found.</p>
-                    </div>
-                )
+                <div className="p-8 text-center">
+                    <p className="text-sm text-gray-500">No transactions found.</p>
+                </div>
             )}
 
         </div>
       </div>
-      
-      {!user.isSubscribed && transactions.length === 0 && (
-        <div className="bg-fuchsia-500/5 border border-fuchsia-500/10 p-4 rounded-xl flex items-start space-x-3">
-            <Icons.FileText className="text-fuchsia-500 mt-0.5" size={20} />
-            <div className="flex-1">
-                <p className="text-sm font-bold text-fuchsia-400">Start Transacting</p>
-                <p className="text-xs text-fuchsia-400/70 mt-1">
-                    Subscribe to a plan to unlock full features and see your history here.
-                </p>
-            </div>
-        </div>
-      )}
       <div className="text-center pb-10">
           <p className="text-[10px] text-gray-500 font-medium">Click on any transaction to view receipt</p>
       </div>

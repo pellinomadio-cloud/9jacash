@@ -44,8 +44,8 @@ const ActionGrid: React.FC<ActionGridProps> = ({
       title: 'Promo',
       subtitle: '',
       icon: Icons.Gift,
-      iconBg: 'bg-[#fef3c7]',
-      iconColor: 'text-[#d97706]',
+      iconBg: 'bg-emerald-50 border border-emerald-200/80',
+      iconColor: 'text-[#008751]',
       isHot: true,
     }
   ];
@@ -116,7 +116,7 @@ const ActionGrid: React.FC<ActionGridProps> = ({
                   </span>
                 )}
                 {action.isHot && (
-                  <span className="mt-1 bg-[#ef4444] text-white text-[9px] font-black px-2 py-0.5 rounded-full tracking-wider shadow-xs uppercase">
+                  <span className="mt-1 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full tracking-wider shadow-xs uppercase border border-amber-300">
                     HOT
                   </span>
                 )}

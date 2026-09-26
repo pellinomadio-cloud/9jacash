@@ -29,7 +29,7 @@ const ServicesPage: React.FC<ServicesPageProps> = ({ user, onActionClick, onBack
     {
       title: "Earn & Rewards",
       items: [
-        { id: "promo", label: "Promo Deals", icon: Icons.Gift, color: "text-amber-600", bg: "bg-amber-50", badge: "HOT", desc: "Exclusive promotional perks & bonuses" },
+        { id: "promo", label: "Promo Deals", icon: Icons.Gift, color: "text-[#008751]", bg: "bg-emerald-50", badge: "HOT", desc: "Exclusive promotional perks & bonuses" },
         { id: "referrals", label: "Refer & Earn", icon: Icons.Users, color: "text-teal-600", bg: "bg-teal-50", badge: "₦15,000", desc: "Earn for inviting friends" },
         { id: "rewards", label: "Rewards & Spin", icon: Icons.Reward, color: "text-amber-500", bg: "bg-amber-50", desc: "Spin fortune wheel daily" },
         { id: "tasks", label: "Daily Tasks", icon: Icons.Calendar, color: "text-orange-600", bg: "bg-orange-50", desc: "Complete tasks for cash" },

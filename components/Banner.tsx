@@ -29,9 +29,9 @@ const Banner: React.FC<BannerProps> = ({ onCheckPromo }) => {
         {/* Left Copy & CTA */}
         <div className="max-w-[62%] flex flex-col items-start">
           {/* Special Offer Pill */}
-          <div className="inline-flex items-center space-x-1 bg-[#dc2626] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs">
-            <span>🔥</span>
-            <span>Special Offer</span>
+          <div className="inline-flex items-center space-x-1.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-slate-950 text-[11px] font-black px-3 py-0.5 rounded-full shadow-sm border border-amber-300/80">
+            <span>🎁</span>
+            <span className="uppercase tracking-wider">Promo Deals</span>
           </div>
 
           {/* Heading */}
@@ -47,10 +47,10 @@ const Banner: React.FC<BannerProps> = ({ onCheckPromo }) => {
           {/* Check Promo Button */}
           <button 
             onClick={onCheckPromo}
-            className="mt-3.5 bg-[#f59e0b] hover:bg-[#d97706] text-slate-950 font-bold text-xs px-4 py-2 rounded-full inline-flex items-center space-x-1 shadow-md active:scale-95 transition-all cursor-pointer"
+            className="mt-3.5 bg-white hover:bg-emerald-50 text-[#013a24] font-extrabold text-xs px-4 py-2 rounded-full inline-flex items-center space-x-1.5 shadow-md active:scale-95 transition-all cursor-pointer group"
           >
             <span>Check Promo</span>
-            <Icons.ChevronRight size={14} strokeWidth={2.5} />
+            <Icons.ChevronRight size={14} strokeWidth={2.5} className="group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>
 

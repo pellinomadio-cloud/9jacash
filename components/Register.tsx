@@ -201,7 +201,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, defaul
               🎁
             </div>
             <div className="flex-1 text-xs">
-              <span className="font-extrabold text-[#013a24] block text-[13px]">₦10,000 Welcome Bonus</span>
+              <span className="font-extrabold text-[#013a24] block text-[13px]">₦43,000 Welcome Bonus</span>
               <span className="text-emerald-700 font-medium">Create your 9jacash profile to activate your bonus immediately!</span>
             </div>
           </div>
@@ -347,7 +347,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, defaul
                 disabled={isLoading}
                 className="w-full py-4 bg-gradient-to-r from-[#013a24] via-[#09573c] to-[#013a24] hover:from-[#012f1d] hover:to-[#012718] text-white font-extrabold rounded-2xl shadow-lg shadow-emerald-950/20 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 text-sm uppercase tracking-wider cursor-pointer disabled:opacity-70"
               >
-                <span>{isLoading ? 'Creating 9jacash Account...' : 'Get Started & Claim ₦10,000'}</span>
+                <span>{isLoading ? 'Creating 9jacash Account...' : 'Get Started & Claim ₦43,000'}</span>
                 {!isLoading && <Icons.ArrowRight className="w-4 h-4 ml-1" />}
               </button>
             </div>
