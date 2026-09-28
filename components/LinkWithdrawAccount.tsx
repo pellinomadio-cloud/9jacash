@@ -818,6 +818,45 @@ const LinkWithdrawAccount: React.FC<LinkWithdrawAccountProps> = ({ user, onBack,
                   </div>
                 </>
               )}
+
+              {/* Popular Banks Quick Select */}
+              <div className="pt-1">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                  Popular Banks
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    "OPay",
+                    "PalmPay",
+                    "Kuda",
+                    "Moniepoint Microfinance Bank",
+                    "Guaranty Trust Bank",
+                    "Access Bank",
+                    "Zenith bank PLC",
+                    "First Bank PLC"
+                  ].map((popBank) => {
+                    const isSelected = bankName === popBank;
+                    return (
+                      <button
+                        key={popBank}
+                        type="button"
+                        onClick={() => {
+                          setBankName(popBank);
+                          setBankSearch(popBank);
+                          setIsBankDropdownOpen(false);
+                        }}
+                        className={`text-[11px] font-bold px-2.5 py-1 rounded-xl transition-all cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#008751] text-white shadow-xs'
+                            : 'bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-[#008751] border border-slate-200/60'
+                        }`}
+                      >
+                        {popBank.replace(' Microfinance Bank', '').replace(' PLC', '')}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
             {/* 2. Account Number Input */}

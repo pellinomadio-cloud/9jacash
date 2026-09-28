@@ -10,6 +10,7 @@ interface ProfileProps {
   toggleDarkMode: () => void;
   onLogout: () => void;
   vendorTelegramLink?: string;
+  onOpenAiSupport?: () => void;
 }
 
 const Profile: React.FC<ProfileProps> = ({ 
@@ -19,7 +20,8 @@ const Profile: React.FC<ProfileProps> = ({
   darkMode, 
   toggleDarkMode, 
   onLogout, 
-  vendorTelegramLink 
+  vendorTelegramLink,
+  onOpenAiSupport 
 }) => {
   const [name, setName] = useState(user.name);
   const [isEditingName, setIsEditingName] = useState(false);
@@ -276,11 +278,13 @@ const Profile: React.FC<ProfileProps> = ({
           </div>
         )}
 
-        {/* Official Vendor Support Link */}
+        {/* Official 24/7 AI Support & Vendor Desk Link */}
         <div>
           <button 
             onClick={() => {
-              if (vendorTelegramLink) {
+              if (onOpenAiSupport) {
+                onOpenAiSupport();
+              } else if (vendorTelegramLink) {
                 window.open(vendorTelegramLink, "_blank");
               } else {
                 window.open("https://t.me/9jacash_support", "_blank");
@@ -289,15 +293,20 @@ const Profile: React.FC<ProfileProps> = ({
             className="w-full p-4 bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 rounded-2xl flex items-center justify-between group transition-all active:scale-[0.98] text-left cursor-pointer"
           >
             <div className="flex items-center space-x-3">
-              <div className="p-2.5 bg-blue-500 text-white rounded-xl shadow-sm group-hover:scale-105 transition-transform">
-                <Icons.Send size={18} />
+              <div className="p-2.5 bg-gradient-to-tr from-[#013a24] to-[#025636] text-white rounded-xl shadow-sm group-hover:scale-105 transition-transform">
+                <Icons.Bot size={18} className="text-amber-300" />
               </div>
               <div>
-                <p className="text-xs font-black text-slate-900 leading-tight">
-                  Verified Support & Vendor Desk
-                </p>
+                <div className="flex items-center space-x-2">
+                  <p className="text-xs font-black text-slate-900 leading-tight">
+                    24/7 AI Support & Assistance
+                  </p>
+                  <span className="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded-full border border-emerald-300">
+                    ONLINE
+                  </span>
+                </div>
                 <p className="text-[10px] text-slate-500 font-medium mt-0.5">
-                  Telegram Official Help Desk
+                  Instant help with withdrawals, quick codes & account
                 </p>
               </div>
             </div>

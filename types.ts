@@ -101,15 +101,25 @@ export interface User {
   referralCount?: number;
   vipTier?: 'vip1' | 'vip2' | 'vip3' | null;
   vipActivationTimestamp?: number;
-  pendingActivation?: 'subscription_weekly' | 'subscription_monthly' | 'subscription_quarterly' | 'subscription_yearly' | 'subscription_promo' | 'vip' | 'vip1' | 'vip2' | 'vip3' | 'link_account' | 'investment' | 'imminent_payment' | 'deposit' | null;
+  pendingActivation?: 'subscription_weekly' | 'subscription_monthly' | 'subscription_quarterly' | 'subscription_yearly' | 'subscription_promo' | 'vip' | 'vip1' | 'vip2' | 'vip3' | 'link_account' | 'investment' | 'imminent_payment' | 'deposit' | 'quick_code' | null;
   pendingDeposit?: { id?: string; userEmail?: string; userName?: string; amount: number; paymentProof: string; status: 'pending' | 'approved' | 'declined'; date: string; timestamp?: number } | null;
   pendingPaymentProof?: string; // Base64 string representing the uploaded image
   pendingPaymentDate?: string; // ISO String of when proof was uploaded
   pendingPaymentAmount?: number; // The amount paid
   isAccountLinkedVerified?: boolean;
+  hasMadeFirstWithdrawal?: boolean;
   linkedBankName?: string;
   linkedAccountNumber?: string;
   linkedAccountName?: string;
+  activeQuickCode?: string; // Purchased valid quick code
+  quickCodeRemainingWithdrawals?: number; // 1, 3, 10, or 999999 (unlimited)
+  purchasedQuickCodes?: Array<{
+    code: string;
+    planAmount: number;
+    withdrawalsAllowed: number;
+    withdrawalsRemaining: number;
+    purchasedAt: string;
+  }>;
   adminNotifications?: SystemNotificationItem[];
   tradeBalanceUsd?: number;
   tradeProfitUsd?: number;

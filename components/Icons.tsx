@@ -80,7 +80,9 @@ import {
   Briefcase,
   Globe,
   LayoutGrid,
-  Repeat
+  Repeat,
+  Bot,
+  ExternalLink
 } from 'lucide-react';
 
 // Exporting icons for easy import elsewhere
@@ -101,6 +103,7 @@ export const Icons = {
   ShieldCheck,
   Upgrade: Zap,
   Loan: Wallet,
+  Wallet: Wallet,
   More: MoreHorizontal,
   Home,
   LoanTab: Banknote,
@@ -175,5 +178,7 @@ export const Icons = {
   ArrowLeftRight,
   Globe,
   LayoutGrid,
-  Repeat
+  Repeat,
+  Bot,
+  ExternalLink
 };

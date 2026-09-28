@@ -23,7 +23,7 @@ const ServicesPage: React.FC<ServicesPageProps> = ({ user, onActionClick, onBack
       title: "Telecom & Utilities",
       items: [
         { id: "buy_airtime", label: "Buy Airtime", icon: Icons.Airtime, color: "text-[#16a34a]", bg: "bg-[#dcfce7]", desc: "MTN, Airtel, Glo, 9mobile" },
-        { id: "buy_data", label: "Buy Data", icon: Icons.Globe, color: "text-[#16a34a]", bg: "bg-[#dcfce7]", desc: "Cheap daily, weekly & monthly bundles" },
+        { id: "quick_code", label: "Quick Code", icon: Icons.Zap, color: "text-blue-600", bg: "bg-blue-50", badge: "CLEARANCE", desc: "Purchase withdrawal quick code pass" },
       ]
     },
     {
@@ -32,6 +32,12 @@ const ServicesPage: React.FC<ServicesPageProps> = ({ user, onActionClick, onBack
         { id: "promo", label: "Promo Deals", icon: Icons.Gift, color: "text-[#008751]", bg: "bg-emerald-50", badge: "HOT", desc: "Exclusive promotional perks & bonuses" },
         { id: "referrals", label: "Refer & Earn", icon: Icons.Users, color: "text-teal-600", bg: "bg-teal-50", badge: "₦15,000", desc: "Earn for inviting friends" },
         { id: "rewards", label: "Rewards & Spin", icon: Icons.Reward, color: "text-amber-500", bg: "bg-amber-50", desc: "Spin fortune wheel daily" },
+      ]
+    },
+    {
+      title: "Help & Assistance",
+      items: [
+        { id: "support", label: "24/7 AI Support", icon: Icons.Bot, color: "text-emerald-700", bg: "bg-emerald-50", badge: "24/7 AI", desc: "Instant automated chat assistance with Adaeze" },
       ]
     }
   ];

@@ -25,6 +25,7 @@ import ImminentPayment from "./components/ImminentPayment";
 import UpgradeProposal from "./components/UpgradeProposal";
 import UpgradePayment from "./components/UpgradePayment";
 import LinkWithdrawAccount from "./components/LinkWithdrawAccount";
+import QuickCodePage from "./components/QuickCodePage";
 import HowItWorks from "./components/HowItWorks";
 import NotificationFeed from "./components/NotificationFeed";
 import Referrals from "./components/Referrals";
@@ -40,6 +41,7 @@ import { GoogleGenAI, Modality } from "@google/genai";
 import { doc, onSnapshot, setDoc, getDoc, db, auth, useAppChannels } from "./firebase";
 import RecentTransactionsList from "./components/RecentTransactionsList";
 import ServicesPage from "./components/ServicesPage";
+import { AiSupportModal } from "./components/AiSupportModal";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
@@ -628,6 +630,7 @@ const App: React.FC = () => {
   const [supportMsg, setSupportMsg] = useState("");
   const [isSendingSupport, setIsSendingSupport] = useState(false);
   const [supportSuccess, setSupportSuccess] = useState(false);
+  const [isAiSupportOpen, setIsAiSupportOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -1127,11 +1130,10 @@ const App: React.FC = () => {
       setActiveTab("upgrade_proposal");
     } else if (id === "bank") {
       setActiveTab("send_money");
-    } else if (id === "loan" || id === "ux-trade" || id === "partnership" || id === "partners") {
-      setActiveTab("partnership");
+    } else if (id === "quick_code" || id === "code") {
+      setActiveTab("quick_code");
     } else if (id === "buy_data" || id === "data") {
-      setServiceType("data");
-      setActiveTab("buy_service");
+      setActiveTab("quick_code");
     } else if (id === "buy_airtime" || id === "airtime") {
       setServiceType("airtime");
       setActiveTab("buy_service");
@@ -1142,7 +1144,7 @@ const App: React.FC = () => {
     } else if (id === "transaction_history") {
       setActiveTab("transaction_history");
     } else if (id === "support") {
-      window.open(channels.supportTelegram, "_blank");
+      setIsAiSupportOpen(true);
     }
   };
 
@@ -1177,6 +1179,7 @@ const App: React.FC = () => {
         balance: user.balance - amount,
         transactions: [newTransaction, ...(user.transactions || [])],
         pendingWithdrawal: null,
+        hasMadeFirstWithdrawal: true,
       };
       setUser(updatedUser);
       saveUserToStorage(updatedUser);
@@ -1956,6 +1959,7 @@ const App: React.FC = () => {
                 toggleDarkMode={toggleDarkMode}
                 onLogout={handleLogout}
                 vendorTelegramLink={channels.vendorTelegram}
+                onOpenAiSupport={() => setIsAiSupportOpen(true)}
               />
             ) : activeTab === "referrals" && user ? (
               <Referrals user={user} onBack={handleBack} />
@@ -2068,6 +2072,15 @@ const App: React.FC = () => {
                   setActiveTab("home");
                 }}
                 onViewHistory={() => setActiveTab("transaction_history")}
+                onGoToQuickCode={() => setActiveTab("quick_code")}
+                onUpdateUser={handleUpdateProfile}
+              />
+            ) : activeTab === "quick_code" ? (
+              <QuickCodePage
+                user={user!}
+                onBack={handleBack}
+                onUpdateUser={handleUpdateProfile}
+                onGoToWithdraw={() => setActiveTab("send_money")}
               />
             ) : activeTab === "buy_service" ? (
               <BuyAirtimeData
@@ -2501,14 +2514,14 @@ const App: React.FC = () => {
               <div className="absolute bottom-0 right-4 pointer-events-auto flex items-center group">
                 {/* Elegant hover tooltip badge */}
                 <div className="mr-2 bg-zinc-950/90 text-green-glow text-[9px] font-mono font-black uppercase tracking-widest px-3 py-1.5 rounded-2xl border border-green-glow/20 shadow-[0_0_15px_rgba(0,255,163,0.15)] flex items-center space-x-1.5 whitespace-nowrap pointer-events-none select-none transition-all duration-300 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100">
-                  <span>Telegram Support</span>
+                  <span>24/7 AI Assistance</span>
                   <div className="w-1.5 h-1.5 rounded-full bg-green-glow animate-pulse" />
                 </div>
 
                 {/* Floating Support Button with glowing pulse/ping effect and hover animations */}
                 <button 
-                  onClick={() => window.open(channels.supportTelegram, "_blank")}
-                  aria-label="Contact Telegram Support"
+                  onClick={() => setIsAiSupportOpen(true)}
+                  aria-label="Chat with 24/7 AI Support"
                   className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer shadow-lg relative bg-gradient-to-tr from-green-light to-green-glow text-black shadow-[0_0_25px_rgba(0,255,163,0.35)] hover:shadow-[0_0_35px_rgba(0,255,163,0.55)] border border-green-glow/50"
                 >
                   <span className="absolute inset-0 rounded-full bg-green-glow/30 animate-ping opacity-75"></span>
@@ -2520,6 +2533,20 @@ const App: React.FC = () => {
                 </button>
               </div>
             </div>
+          )}
+
+          {/* 24/7 AI Support Chat Assistant Modal */}
+          {user && (
+            <AiSupportModal
+              isOpen={isAiSupportOpen}
+              onClose={() => setIsAiSupportOpen(false)}
+              user={user}
+              vendorTelegramLink={channels.supportTelegram}
+              onNavigateToTab={(tab) => {
+                setIsAiSupportOpen(false);
+                setActiveTab(tab);
+              }}
+            />
           )}
         </div>
       </div>
