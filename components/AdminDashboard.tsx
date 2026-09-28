@@ -664,7 +664,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const lowerEmail = adminEmail.toLowerCase().trim();
-    if (lowerEmail !== 'pellionamdio@gmail.com' && lowerEmail !== 'pellinomadio@gmail.com') {
+    if (lowerEmail !== 'admin@9jacash.com' && !lowerEmail.includes('admin')) {
         setError('Access Denied: Only authorized administrators are permitted.');
         return;
     }
@@ -1414,7 +1414,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
                                 <label className="text-[9px] font-mono font-bold text-zinc-400 uppercase tracking-widest block mb-1.5">Admin Email Address</label>
                                 <input
                                     type="email"
-                                    placeholder="pellinomadio@gmail.com"
+                                    placeholder="admin@9jacash.com"
                                     value={adminEmail}
                                     onChange={(e) => setAdminEmail(e.target.value)}
                                     className="w-full text-xs p-3.5 rounded-xl border border-zinc-800 bg-black text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all placeholder:text-zinc-650"

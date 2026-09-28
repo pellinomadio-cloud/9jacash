@@ -117,7 +117,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, defaul
       }
 
       // 3. Create User session
-      await createUserWithEmailAndPassword(auth, emailKey, securePassword);
+      await createUserWithEmailAndPassword(auth, emailKey, securePassword, trimmedName);
 
       // Update registered accounts list on this device
       if (!deviceAccounts.includes(emailKey)) {

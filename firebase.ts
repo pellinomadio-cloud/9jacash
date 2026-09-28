@@ -35,13 +35,13 @@ const DEFAULT_BANK_DETAILS: BankDetails = {
 };
 
 const DEFAULT_CHANNELS: AppChannels = {
-  telegram: 'https://t.me/pellino_official',
-  whatsapp: 'https://chat.whatsapp.com/pellino_channel',
-  supportEmail: 'support@pellino.com',
-  telegramChannel: 'https://t.me/pellino_official',
-  whatsappChannel: 'https://chat.whatsapp.com/pellino_channel',
-  supportTelegram: 'https://t.me/pellino_official',
-  vendorTelegram: 'https://t.me/pellino_official',
+  telegram: 'https://t.me/9jacash_official',
+  whatsapp: 'https://chat.whatsapp.com/9jacash_channel',
+  supportEmail: 'support@9jacash.com',
+  telegramChannel: 'https://t.me/9jacash_official',
+  whatsappChannel: 'https://chat.whatsapp.com/9jacash_channel',
+  supportTelegram: 'https://t.me/9jacash_official',
+  vendorTelegram: 'https://t.me/9jacash_official',
 };
 
 const DEFAULT_GIVEAWAY: GiveawayStatus = {
@@ -199,6 +199,7 @@ export const syncUserFromLocalToFirestore = async (userOrEmail: any, maybeUserOr
       users[emailKey] = { ...(users[emailKey] || {}), ...targetUser };
     }
     localStorage.setItem('chix9ja_users', JSON.stringify(users));
+    localStorage.setItem('9jacash_users', JSON.stringify(users));
     localStorage.setItem('9jacash_active_session', emailKey);
     localStorage.setItem('chix9ja_active_session', emailKey);
     dispatchLocalUpdate('users');
@@ -315,6 +316,7 @@ export const setDoc = async (docRef: any, data: any, options?: any) => {
       const existing = users[docRef.docId.toLowerCase()] || {};
       users[docRef.docId.toLowerCase()] = options?.merge ? { ...existing, ...data } : data;
       localStorage.setItem('chix9ja_users', JSON.stringify(users));
+      localStorage.setItem('9jacash_users', JSON.stringify(users));
       dispatchLocalUpdate('users');
       return;
     }
@@ -336,6 +338,7 @@ export const deleteDoc = async (docRef: any) => {
       const users = raw ? JSON.parse(raw) : {};
       delete users[docRef.docId.toLowerCase()];
       localStorage.setItem('chix9ja_users', JSON.stringify(users));
+      localStorage.setItem('9jacash_users', JSON.stringify(users));
       dispatchLocalUpdate('users');
       return;
     }
@@ -441,17 +444,40 @@ export const signInWithEmailAndPassword = async (authInstance: any, email: strin
     };
     users[emailKey] = newUser;
     localStorage.setItem('chix9ja_users', JSON.stringify(users));
+    localStorage.setItem('9jacash_users', JSON.stringify(users));
   }
   localStorage.setItem('9jacash_active_session', emailKey);
-    localStorage.setItem('chix9ja_active_session', emailKey);
+  localStorage.setItem('chix9ja_active_session', emailKey);
   dispatchLocalUpdate('auth');
   return { user: { email: emailKey } };
 };
 
-export const createUserWithEmailAndPassword = async (authInstance: any, email: string, pass: string) => {
+export const createUserWithEmailAndPassword = async (authInstance: any, email: string, pass: string, name?: string) => {
   const emailKey = email.toLowerCase().trim();
+  const raw = (localStorage.getItem('9jacash_users') || localStorage.getItem('chix9ja_users'));
+  const users = raw ? JSON.parse(raw) : {};
+  if (!users[emailKey]) {
+    users[emailKey] = {
+      name: name || emailKey.split('@')[0],
+      email: emailKey,
+      balance: 43000,
+      transactions: [
+        {
+          id: `trx_init_${Date.now()}`,
+          type: 'credit',
+          amount: 43000,
+          description: 'Welcome Bonus',
+          date: new Date().toISOString(),
+          status: 'success'
+        }
+      ],
+      hasPlayedWelcomeVoice: false,
+    };
+    localStorage.setItem('chix9ja_users', JSON.stringify(users));
+    localStorage.setItem('9jacash_users', JSON.stringify(users));
+  }
   localStorage.setItem('9jacash_active_session', emailKey);
-    localStorage.setItem('chix9ja_active_session', emailKey);
+  localStorage.setItem('chix9ja_active_session', emailKey);
   dispatchLocalUpdate('auth');
   return { user: { email: emailKey } };
 };

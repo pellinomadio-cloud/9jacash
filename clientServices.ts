@@ -1,15 +1,15 @@
 // Client-side instant service verification & validation (Zero Backend Dependency)
 
 export const FIRST_NAMES = [
-  "PELLINO", "EMMANUEL", "CHINEDU", "OLUMIDE", "BABATUNDE", 
-  "IFEANYI", "NNEKA", "AMAKA", "TUNDE", "CHIDI", 
-  "SULEIMAN", "MUSA", "IBRAHIM", "KELECHI", "TOCHUKWU"
+  "EMMANUEL", "CHINEDU", "OLUMIDE", "BABATUNDE", "IFEANYI", 
+  "NNEKA", "AMAKA", "TUNDE", "CHIDI", "SULEIMAN", 
+  "MUSA", "IBRAHIM", "KELECHI", "TOCHUKWU", "CHUKWUMA"
 ];
 
 export const LAST_NAMES = [
-  "MADIO", "OKEKE", "ADEBAYO", "OJO", "ALABI", 
-  "NWACHUKWU", "EZE", "BALOGUN", "BELLO", "DANJUMA", 
-  "CHUKWU", "OKAFOR", "YUSUF", "OBINNA", "ANYANWU"
+  "OKEKE", "ADEBAYO", "OJO", "ALABI", "NWACHUKWU", 
+  "EZE", "BALOGUN", "BELLO", "DANJUMA", "CHUKWU", 
+  "OKAFOR", "YUSUF", "OBINNA", "ANYANWU", "CHUKWUMA"
 ];
 
 export function getDeterministicAccountName(accountNumber: string): string {

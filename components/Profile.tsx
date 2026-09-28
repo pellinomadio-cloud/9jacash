@@ -29,6 +29,10 @@ const Profile: React.FC<ProfileProps> = ({
   const [saveSuccess, setSaveSuccess] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  React.useEffect(() => {
+    setName(user.name);
+  }, [user.name]);
+
   const referralCode = user.referralCode || user.email.split('@')[0].toUpperCase();
   const accountId = `9JC-${referralCode.slice(0, 8)}`;
 

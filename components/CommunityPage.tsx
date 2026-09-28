@@ -25,7 +25,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ user, onBack, onGo
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const isAdmin = localStorage.getItem("9jacash_admin_logged_in") === "true" || localStorage.getItem("chix9ja_admin_logged_in") === "true" || user.email.toLowerCase() === 'admin@9jacash.com' || user.email.toLowerCase() === 'pellinomadio@gmail.com';
+  const isAdmin = localStorage.getItem("9jacash_admin_logged_in") === "true" || localStorage.getItem("chix9ja_admin_logged_in") === "true" || user.email.toLowerCase() === 'admin@9jacash.com';
   const isEligible = !!user.isVIP || !!user.isSubscribed || isAdmin;
 
   useEffect(() => {
@@ -170,7 +170,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ user, onBack, onGo
         ) : (
           messages.map((msg, idx) => {
             const isMe = msg.email.toLowerCase() === user.email.toLowerCase();
-            const msgIsAdmin = !!msg.isAdmin || msg.email.toLowerCase() === 'admin@9jacash.com' || msg.email.toLowerCase() === 'pellinomadio@gmail.com';
+            const msgIsAdmin = !!msg.isAdmin || msg.email.toLowerCase() === 'admin@9jacash.com';
             return (
               <div
                 key={msg.id || idx}

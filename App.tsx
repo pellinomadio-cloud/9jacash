@@ -254,8 +254,11 @@ const App: React.FC = () => {
   // Helper to get stored users safely
   const getStoredUsers = () => {
     try {
-      const stored = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
-      return stored ? JSON.parse(stored) : {};
+      const stored9ja = localStorage.getItem("9jacash_users");
+      const storedChix = localStorage.getItem("chix9ja_users");
+      const u1 = stored9ja ? JSON.parse(stored9ja) : {};
+      const u2 = storedChix ? JSON.parse(storedChix) : {};
+      return { ...u2, ...u1 };
     } catch (e) {
       return {};
     }
@@ -374,6 +377,7 @@ const App: React.FC = () => {
     const existingUsers = getStoredUsers();
     existingUsers[emailKey] = cleanUser;
     localStorage.setItem("chix9ja_users", JSON.stringify(existingUsers));
+    localStorage.setItem("9jacash_users", JSON.stringify(existingUsers));
 
     // Async write to Firestore so database is always fully synced across devices
     const sanitizedUser = sanitizeForFirestore(cleanUser);
@@ -414,8 +418,12 @@ const App: React.FC = () => {
                 "chix9ja_users",
                 JSON.stringify(existingUsers),
               );
+              localStorage.setItem(
+                "9jacash_users",
+                JSON.stringify(existingUsers),
+              );
               localStorage.setItem("9jacash_active_session", emailKey);
-    localStorage.setItem("chix9ja_active_session", emailKey);
+              localStorage.setItem("chix9ja_active_session", emailKey);
             }
           },
           (err) => {
@@ -1061,6 +1069,7 @@ const App: React.FC = () => {
     };
 
     saveUserToStorage(newUser);
+    localStorage.setItem("9jacash_active_session", email.toLowerCase());
     localStorage.setItem("chix9ja_active_session", email.toLowerCase());
     try {
       sessionStorage.setItem("9jacash_just_registered", "true");
