@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { createServer as createViteServer } from 'vite';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Modality } from '@google/genai';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -122,6 +122,56 @@ async function startServer() {
       // Even on error, always return a helpful response so the user is never left hanging
       const fallback = generateIntelligentFallback(req.body?.message || '', req.body?.userContext);
       return res.json({ reply: fallback, source: 'fallback_error_recovery' });
+    }
+  });
+
+  // Text-to-Speech endpoint for welcome voice
+  app.post('/api/tts', async (req, res) => {
+    try {
+      const { text } = req.body;
+      const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+      if (!apiKey) {
+        return res.status(404).json({ error: 'API key not configured' });
+      }
+
+      const ai = new GoogleGenAI({
+        apiKey,
+        httpOptions: {
+          headers: {
+            'User-Agent': 'aistudio-build',
+          },
+        },
+      });
+
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-preview-tts',
+        contents: [
+          {
+            parts: [
+              {
+                text: text || 'Welcome to 9jacash',
+              },
+            ],
+          },
+        ],
+        config: {
+          responseModalities: [Modality.AUDIO],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: 'Kore' },
+            },
+          },
+        },
+      });
+
+      const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+      if (base64Audio) {
+        return res.json({ audio: base64Audio });
+      }
+      return res.status(500).json({ error: 'No audio generated' });
+    } catch (err: any) {
+      console.error('Error in TTS endpoint:', err);
+      return res.status(500).json({ error: err.message || 'TTS generation failed' });
     }
   });
 

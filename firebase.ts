@@ -28,7 +28,7 @@ export interface AppChannels {
 }
 
 const DEFAULT_BANK_DETAILS: BankDetails = {
-  accountName: 'PELLINO ENTERPRISES',
+  accountName: '9JACASH OFFICIAL PAYMENTS',
   accountNumber: '8149204812',
   bankName: 'OPay Digital Services',
   updatedAt: Date.now()

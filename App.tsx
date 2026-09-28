@@ -780,6 +780,21 @@ const App: React.FC = () => {
     }
   }, [user]);
 
+  const fallbackSpeechSynthesis = (userName?: string) => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+        const greeting = `Welcome to 9jacash ${userName || ''}. Kindly note that you can now join the 9jacash official partnership program to earn high recurring commissions, click the rewards button to earn daily rewards, and withdraw directly to your bank account anytime. Thanks for joining 9jacash!`;
+        const utterance = new SpeechSynthesisUtterance(greeting);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.1;
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        console.error('SpeechSynthesis error:', e);
+      }
+    }
+  };
+
   useEffect(() => {
     const playWelcomeVoice = async () => {
       if (
@@ -787,68 +802,60 @@ const App: React.FC = () => {
         user.hasPlayedWelcomeVoice === false &&
         currentView === "dashboard"
       ) {
+        let played = false;
         try {
-          const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash-preview-tts",
-            contents: [
-              {
-                parts: [
-                  {
-                    text: "Say cheerfully: welcome to 9jacash, kindly note that you can now join the 9jacash official partnership program to earn high recurring commissions, click the rewards button to earn daily rewards, and withdraw directly to your bank account anytime, thanks for joining 9jacash",
-                  },
-                ],
-              },
-            ],
-            config: {
-              responseModalities: [Modality.AUDIO],
-              speechConfig: {
-                voiceConfig: {
-                  prebuiltVoiceConfig: { voiceName: "Kore" },
-                },
-              },
-            },
+          const res = await fetch("/api/tts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              text: `Welcome to 9jacash ${user.name || ""}, kindly note that you can now join the 9jacash official partnership program to earn high recurring commissions, click the rewards button to earn daily rewards, and withdraw directly to your bank account anytime, thanks for joining 9jacash`
+            }),
           });
 
-          const base64Audio =
-            response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-          if (base64Audio) {
-            const audioContext = new (
-              window.AudioContext || (window as any).webkitAudioContext
-            )();
-            const binaryString = window.atob(base64Audio);
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-              bytes[i] = binaryString.charCodeAt(i);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.audio) {
+              const audioContext = new (
+                window.AudioContext || (window as any).webkitAudioContext
+              )();
+              if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+              }
+              const binaryString = window.atob(data.audio);
+              const len = binaryString.length;
+              const bytes = new Uint8Array(len);
+              for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+              }
+              const pcmData = new Int16Array(bytes.buffer);
+              const float32Data = new Float32Array(pcmData.length);
+              for (let i = 0; i < pcmData.length; i++) {
+                float32Data[i] = pcmData[i] / 32768;
+              }
+              const buffer = audioContext.createBuffer(
+                1,
+                float32Data.length,
+                24000,
+              );
+              buffer.getChannelData(0).set(float32Data);
+              const source = audioContext.createBufferSource();
+              source.buffer = buffer;
+              source.connect(audioContext.destination);
+              source.start();
+              played = true;
             }
-            const pcmData = new Int16Array(bytes.buffer);
-            const float32Data = new Float32Array(pcmData.length);
-            for (let i = 0; i < pcmData.length; i++) {
-              float32Data[i] = pcmData[i] / 32768;
-            }
-            const buffer = audioContext.createBuffer(
-              1,
-              float32Data.length,
-              24000,
-            );
-            buffer.getChannelData(0).set(float32Data);
-            const source = audioContext.createBufferSource();
-            source.buffer = buffer;
-            source.connect(audioContext.destination);
-            source.start();
-
-            // Update user to mark voice as played
-            const updatedUser = { ...user, hasPlayedWelcomeVoice: true };
-            setUser(updatedUser);
-            saveUserToStorage(updatedUser);
           }
         } catch (error) {
-          console.error("Error playing welcome voice:", error);
-          // Still mark as played to avoid repeated failures
-          const updatedUser = { ...user, hasPlayedWelcomeVoice: true };
-          setUser(updatedUser);
-          saveUserToStorage(updatedUser);
+          console.error("Error playing welcome voice via API:", error);
         }
+
+        if (!played) {
+          fallbackSpeechSynthesis(user.name);
+        }
+
+        const updatedUser = { ...user, hasPlayedWelcomeVoice: true };
+        setUser(updatedUser);
+        saveUserToStorage(updatedUser);
       }
     };
 
