@@ -23,33 +23,27 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onBack, onPlayQuiz, onSubscribe
            <div className="mx-auto w-20 h-20 bg-green-glow/10 rounded-[2rem] flex items-center justify-center text-green-glow mb-2">
               <Icons.Celebration size={40} />
            </div>
-           <h3 className="text-3xl font-black text-white uppercase tracking-tighter">Welcome to <span className="text-green-glow">chix9ja</span></h3>
+           <h3 className="text-3xl font-black text-white uppercase tracking-tighter">Welcome to <span className="text-green-glow">9jacash</span></h3>
            <p className="text-gray-400 text-sm leading-relaxed">
-             Nigeria's leading digital rewards and finance platform. We've made earning and managing funds simple, fun, and highly rewarding.
+             Nigeria's leading digital rewards and finance platform. We've made earning and managing funds simple, transparent, and highly rewarding.
            </p>
         </div>
 
         <div className="grid gap-4">
-          {/* Step 1: Play & Earn */}
+          {/* Step 1: Fortune Wheel & Daily Rewards */}
           <div className="bg-gray-900 border border-white/5 rounded-3xl p-6 flex flex-col space-y-4">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-fuchsia-500/10 rounded-2xl flex items-center justify-center text-fuchsia-500">
-                <Icons.Trophy size={24} />
+              <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500">
+                <Icons.Reward size={24} />
               </div>
               <div>
-                <h4 className="text-white font-bold uppercase text-sm tracking-tight">1. Play to Earn</h4>
+                <h4 className="text-white font-bold uppercase text-sm tracking-tight">1. Spin to Win & Daily Streaks</h4>
                 <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-none">Instant Cash Prizes</p>
               </div>
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">
-              Test your knowledge with our daily quizzes. Every correct answer builds your balance. Win up to <span className="text-white font-bold">₦2,000</span> per win!
+              Spin the Fortune Wheel daily and claim 100-day streak bonuses. Win up to <span className="text-white font-bold">₦500,000</span> jackpot prizes directly to your wallet!
             </p>
-            <button 
-                onClick={onPlayQuiz}
-                className="w-full py-3 bg-fuchsia-600 text-white font-bold rounded-xl text-xs uppercase tracking-widest active:scale-95 transition-all"
-            >
-                Play Quiz Now
-            </button>
           </div>
 
           {/* Step 2: Instant Rewards */}
@@ -64,7 +58,7 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onBack, onPlayQuiz, onSubscribe
               </div>
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">
-              Earn from welcome bonuses, quiz wins, tasks, and daily check-ins directly into your 9jacash wallet balance.
+              Earn from welcome bonuses, fortune wheel spins, referrals, and daily check-ins directly into your 9jacash wallet balance.
             </p>
           </div>
 

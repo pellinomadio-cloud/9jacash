@@ -88,7 +88,7 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({ transaction, us
 
             <div className="flex justify-between items-start">
               <span className="text-xs font-bold text-gray-500 uppercase">Sender/Recipient</span>
-              <span className="text-sm font-bold text-gray-200">{isCredit ? 'chix9ja System' : userName}</span>
+              <span className="text-sm font-bold text-gray-200">{isCredit ? '9jacash System' : userName}</span>
             </div>
 
             <div className="flex justify-between items-start">
@@ -121,7 +121,7 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({ transaction, us
           <div className="pt-4 w-full">
             <div className="bg-black/50 p-3 rounded-xl flex items-center justify-center space-x-2">
               <Icons.ShieldCheck size={14} className="text-green-glow" />
-              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">Verified by chix9ja Security</span>
+              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">Verified by 9jacash Security</span>
             </div>
           </div>
         </div>
@@ -139,8 +139,8 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({ transaction, us
           onClick={() => {
             if (navigator.share) {
               navigator.share({
-                title: 'chix9ja Transaction Receipt',
-                text: `Transaction of ₦${transaction.amount.toLocaleString()} is ${transaction.status} on chix9ja. Ref: ${transaction.id}`
+                title: '9jacash Transaction Receipt',
+                text: `Transaction of ₦${transaction.amount.toLocaleString()} is ${transaction.status} on 9jacash. Ref: ${transaction.id}`
               });
             } else {
               alert('Receipt shared successfully (simulated)');

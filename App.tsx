@@ -16,14 +16,12 @@ import AdminDashboard from "./components/AdminDashboard";
 import TransactionHistory from "./components/TransactionHistory";
 import TransactionReceipt from "./components/TransactionReceipt";
 import BuyAirtimeData from "./components/BuyAirtimeData";
-import TelegramAd from "./components/TelegramAd";
 import LiveNotifications from "./components/LiveNotifications";
 import Restricted from "./components/Restricted";
 import SubscriptionNotification from "./components/SubscriptionNotification";
 import ActiveSubscriptionNotification from "./components/ActiveSubscriptionNotification";
 import ImminentDeactivationNotification from "./components/ImminentDeactivationNotification";
 import ImminentPayment from "./components/ImminentPayment";
-import TaskPage from "./components/TaskPage";
 import UpgradeProposal from "./components/UpgradeProposal";
 import UpgradePayment from "./components/UpgradePayment";
 import LinkWithdrawAccount from "./components/LinkWithdrawAccount";
@@ -32,11 +30,9 @@ import NotificationFeed from "./components/NotificationFeed";
 import Referrals from "./components/Referrals";
 import FloatingMoneyBackground from "./components/FloatingMoneyBackground";
 import Partnership from "./components/Partnership";
-import Investment from "./components/Investment";
 import PromoPage from "./components/PromoPage";
 import DepositPage from "./components/DepositPage";
 import { CommunityPage } from "./components/CommunityPage";
-import { AdvertisePage } from "./components/AdvertisePage";
 import { Icons } from "./components/Icons";
 import { InstalledAppIcon } from "./components/InstalledAppIcon";
 import { User, Plan, Transaction, RewardStatus, WithdrawalRequest } from "./types";
@@ -69,7 +65,7 @@ const App: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isNewRegistration, setIsNewRegistration] = useState(() => {
     try {
-      return sessionStorage.getItem("chix9ja_just_registered") === "true";
+      return (sessionStorage.getItem("9jacash_just_registered") || sessionStorage.getItem("chix9ja_just_registered")) === "true";
     } catch {
       return false;
     }
@@ -82,7 +78,7 @@ const App: React.FC = () => {
     try {
       if (typeof window !== "undefined") {
         const isStandalone = window.matchMedia("(display-mode: standalone)").matches || (window.navigator as any).standalone === true;
-        const stored = localStorage.getItem("chix9ja_app_installed") === "true";
+        const stored = (localStorage.getItem("9jacash_app_installed") || localStorage.getItem("chix9ja_app_installed")) === "true";
         return isStandalone || stored;
       }
       return false;
@@ -99,7 +95,8 @@ const App: React.FC = () => {
     const onInstalled = () => {
       setIsAppInstalled(true);
       try {
-        localStorage.setItem("chix9ja_app_installed", "true");
+        localStorage.setItem("9jacash_app_installed", "true");
+    localStorage.setItem("chix9ja_app_installed", "true");
       } catch {}
     };
     window.addEventListener("appinstalled", onInstalled);
@@ -110,7 +107,8 @@ const App: React.FC = () => {
         if (e.matches) {
           setIsAppInstalled(true);
           try {
-            localStorage.setItem("chix9ja_app_installed", "true");
+            localStorage.setItem("9jacash_app_installed", "true");
+    localStorage.setItem("chix9ja_app_installed", "true");
           } catch {}
         }
       };
@@ -169,7 +167,8 @@ const App: React.FC = () => {
             console.log("User accepted native installation");
             setIsAppInstalled(true);
             try {
-              localStorage.setItem("chix9ja_app_installed", "true");
+              localStorage.setItem("9jacash_app_installed", "true");
+    localStorage.setItem("chix9ja_app_installed", "true");
             } catch {}
             setShowInstallPopup(false);
           } else {
@@ -211,7 +210,8 @@ const App: React.FC = () => {
           setIsInstalling(false);
           setIsAppInstalled(true);
           try {
-            localStorage.setItem("chix9ja_app_installed", "true");
+            localStorage.setItem("9jacash_app_installed", "true");
+    localStorage.setItem("chix9ja_app_installed", "true");
           } catch {}
           setShowInstallPopup(false);
           alert("9jacash has been successfully added to your device Home Launcher with the new 3D Gold & Emerald official app icon! Access us directly from your drawer anytime.");
@@ -227,7 +227,7 @@ const App: React.FC = () => {
   // Standalone Admin Path States
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
     try {
-      return localStorage.getItem("chix9ja_admin_logged_in") === "true";
+      return localStorage.getItem("9jacash_admin_logged_in") === "true" || (localStorage.getItem("9jacash_admin_logged_in") || localStorage.getItem("chix9ja_admin_logged_in")) === "true";
     } catch {
       return false;
     }
@@ -251,7 +251,7 @@ const App: React.FC = () => {
   // Helper to get stored users safely
   const getStoredUsers = () => {
     try {
-      const stored = localStorage.getItem("chix9ja_users");
+      const stored = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
       return stored ? JSON.parse(stored) : {};
     } catch (e) {
       return {};
@@ -261,7 +261,7 @@ const App: React.FC = () => {
   // Initialize User State from LocalStorage (Persistence)
   const [user, setUser] = useState<User | null>(() => {
     try {
-      const activeEmail = localStorage.getItem("chix9ja_active_session");
+      const activeEmail = (localStorage.getItem("9jacash_active_session") || localStorage.getItem("chix9ja_active_session"));
       if (activeEmail) {
         const users = getStoredUsers();
         const storedUser = users[activeEmail.toLowerCase()];
@@ -334,33 +334,7 @@ const App: React.FC = () => {
     } catch (e) {
       console.error("Error restoring session", e);
     }
-    const defaultUser: User = {
-      name: "Pellino",
-      email: "pellino@9jacash.com",
-      balance: 43000,
-      transactions: [
-        {
-          id: "trx-bonus-init",
-          type: "credit",
-          amount: 43000,
-          description: "Welcome Bonus",
-          date: new Date().toISOString(),
-          status: "success",
-        },
-      ],
-      rewardStatus: { currentDay: 1, lastClaimedTimestamp: 0 },
-      notificationPreferences: { ...DEFAULT_NOTIFICATION_PREFERENCES },
-      referralCode: "PELLINO99",
-      referralCount: 0,
-      referralEarnings: 0,
-    };
-    try {
-      const users = getStoredUsers();
-      users["pellino@9jacash.com"] = defaultUser;
-      localStorage.setItem("chix9ja_users", JSON.stringify(users));
-      localStorage.setItem("chix9ja_active_session", "pellino@9jacash.com");
-    } catch {}
-    return defaultUser;
+    return null;
   });
 
   // Helper to sanitize undefined values recursively for Firestore compatibility
@@ -424,7 +398,8 @@ const App: React.FC = () => {
                 "chix9ja_users",
                 JSON.stringify(existingUsers),
               );
-              localStorage.setItem("chix9ja_active_session", emailKey);
+              localStorage.setItem("9jacash_active_session", emailKey);
+    localStorage.setItem("chix9ja_active_session", emailKey);
             }
           },
           (err) => {
@@ -627,8 +602,15 @@ const App: React.FC = () => {
       if ((params.get("transaction_id") || params.get("id")) && params.get("status")) {
         return "payment-callback";
       }
+      const activeEmail = (localStorage.getItem("9jacash_active_session") || localStorage.getItem("chix9ja_active_session"));
+      if (activeEmail) {
+        const users = getStoredUsers();
+        if (users[activeEmail.toLowerCase()]) {
+          return "dashboard";
+        }
+      }
     } catch {}
-    return "dashboard";
+    return "register";
   });
 
   const [activeTab, setActiveTab] = useState("home");
@@ -638,11 +620,7 @@ const App: React.FC = () => {
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
   const [serviceType, setServiceType] = useState<"airtime" | "data">("airtime");
-  const [showWelcomeAd, setShowWelcomeAd] = useState(false);
-  const [taskMode, setTaskMode] = useState<"quiz" | "telegram" | "all">("all");
   const [showVipNotice, setShowVipNotice] = useState(false);
-  const [showWithdrawReferralAdvert, setShowWithdrawReferralAdvert] =
-    useState(false);
   const [showActiveSubscriptionNotice, setShowActiveSubscriptionNotice] =
     useState(false);
   const [showSupportMenu, setShowSupportMenu] = useState(false);
@@ -670,7 +648,8 @@ const App: React.FC = () => {
         setShowInstallPopup(true);
         setIsNewRegistration(false);
         try {
-          sessionStorage.removeItem("chix9ja_just_registered");
+          sessionStorage.removeItem("9jacash_just_registered");
+    sessionStorage.removeItem("chix9ja_just_registered");
         } catch {}
       }, 7000);
       return () => clearTimeout(timer);
@@ -882,8 +861,7 @@ const App: React.FC = () => {
       activeTab === "link_withdraw_account" ||
       activeTab === "how_it_works" ||
       activeTab === "promo" ||
-      activeTab === "community" ||
-      activeTab === "advertise"
+      activeTab === "community"
     ) {
       setActiveTab("home");
     } else if (activeTab === "admin") {
@@ -989,7 +967,7 @@ const App: React.FC = () => {
           await setDoc(refDocRef, updatedRef);
 
           // Sync local storage in case local caches are used
-          const existingUsersStr = localStorage.getItem("chix9ja_users");
+          const existingUsersStr = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
           const existingUsers = existingUsersStr
             ? JSON.parse(existingUsersStr)
             : {};
@@ -1004,7 +982,7 @@ const App: React.FC = () => {
     // Enforce device registration limit in App.tsx as well
     let deviceAccounts: string[] = [];
     try {
-      const stored = localStorage.getItem("chix9ja_device_registered_accounts");
+      const stored = (localStorage.getItem("9jacash_device_registered_accounts") || localStorage.getItem("chix9ja_device_registered_accounts"));
       if (stored) {
         deviceAccounts = JSON.parse(stored);
       }
@@ -1012,7 +990,7 @@ const App: React.FC = () => {
 
     const emailKey = email.toLowerCase().trim();
     if (!deviceAccounts.includes(emailKey) && deviceAccounts.length >= 5) {
-      alert("Registration limit exceeded: You cannot create more than 5 chix9ja accounts on this device.");
+      alert("Registration limit exceeded: You cannot create more than 5 9jacash accounts on this device.");
       return;
     }
 
@@ -1023,10 +1001,11 @@ const App: React.FC = () => {
 
     let deviceId = "";
     try {
-      deviceId = localStorage.getItem("chix9ja_device_id") || "";
+      deviceId = (localStorage.getItem("9jacash_device_id") || localStorage.getItem("chix9ja_device_id")) || "";
       if (!deviceId) {
         deviceId = "dev_" + Math.random().toString(36).substring(2, 15) + "_" + Date.now();
-        localStorage.setItem("chix9ja_device_id", deviceId);
+        localStorage.setItem("9jacash_device_id", deviceId);
+    localStorage.setItem("chix9ja_device_id", deviceId);
       }
     } catch {
       deviceId = "dev_unknown";
@@ -1056,18 +1035,19 @@ const App: React.FC = () => {
     saveUserToStorage(newUser);
     localStorage.setItem("chix9ja_active_session", email.toLowerCase());
     try {
-      sessionStorage.setItem("chix9ja_just_registered", "true");
+      sessionStorage.setItem("9jacash_just_registered", "true");
+    sessionStorage.setItem("chix9ja_just_registered", "true");
     } catch (e) {}
     setIsNewRegistration(true);
     setUser(newUser);
     setCurrentView("dashboard");
     setActiveTab("home");
-    setShowWelcomeAd(true);
     setHasUnreadNotifications(true);
   };
 
   const handleLogin = (email: string, name: string) => {
     const emailKey = email.toLowerCase().trim();
+    localStorage.setItem("9jacash_active_session", emailKey);
     localStorage.setItem("chix9ja_active_session", emailKey);
     setCurrentView("dashboard");
     setActiveTab("home");
@@ -1075,6 +1055,7 @@ const App: React.FC = () => {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("9jacash_active_session");
     localStorage.removeItem("chix9ja_active_session");
     auth.signOut().catch((err) => console.error("Error signing out", err));
     setUser(null);
@@ -1136,8 +1117,6 @@ const App: React.FC = () => {
       setActiveTab("promo");
     } else if (id === "community") {
       setActiveTab("community");
-    } else if (id === "advertise") {
-      setActiveTab("advertise");
     } else if (id === "rewards" || id === "reward" || id === "sync") {
       setActiveTab("reward");
     } else if (id === "referrals") {
@@ -1148,14 +1127,6 @@ const App: React.FC = () => {
       setActiveTab("upgrade_proposal");
     } else if (id === "bank") {
       setActiveTab("send_money");
-    } else if (id === "quiz_game") {
-      setTaskMode("quiz");
-      setActiveTab("task_dashboard");
-    } else if (id === "tasks" || id === "free_withdraw") {
-      setTaskMode("telegram");
-      setActiveTab("task_dashboard");
-    } else if (id === "invest") {
-      setActiveTab("invest");
     } else if (id === "loan" || id === "ux-trade" || id === "partnership" || id === "partners") {
       setActiveTab("partnership");
     } else if (id === "buy_data" || id === "data") {
@@ -1191,6 +1162,7 @@ const App: React.FC = () => {
     if (user) {
       const isPending = user.isStarMember ? false : true;
       const txId = `trx-send-${Date.now()}`;
+      const isFirst = !user.transactions?.some((t) => t.type === "debit");
       const newTransaction: Transaction = {
         id: txId,
         type: "debit",
@@ -1198,6 +1170,7 @@ const App: React.FC = () => {
         description: recipientInfo,
         date: new Date().toISOString(),
         status: isPending ? "pending" : "success",
+        isFirstWithdrawal: isFirst,
       };
       const updatedUser: User = {
         ...user,
@@ -1306,7 +1279,7 @@ const App: React.FC = () => {
         id: `trx-tg-${Date.now()}`,
         type: "credit",
         amount: rewardAmount,
-        description: "Daily Telegram Channel Task Reward",
+        description: "Telegram Community Bonus",
         date: new Date().toISOString(),
         status: "success",
       };
@@ -1340,7 +1313,7 @@ const App: React.FC = () => {
         id: `trx-tg2-${Date.now()}`,
         type: "credit",
         amount: rewardAmount,
-        description: "Daily Telegram Channel 2 Task Reward",
+        description: "Official Channel Bonus",
         date: new Date().toISOString(),
         status: "success",
       };
@@ -1374,7 +1347,7 @@ const App: React.FC = () => {
         id: `trx-wa-${Date.now()}`,
         type: "credit",
         amount: rewardAmount,
-        description: "Daily WhatsApp Channel Task Reward",
+        description: "WhatsApp Community Bonus",
         date: new Date().toISOString(),
         status: "success",
       };
@@ -1471,7 +1444,7 @@ const App: React.FC = () => {
         id: `trx-bw-${Date.now()}`,
         type: "credit",
         amount: rewardAmount,
-        description: "BIGGY WIN Daily Task Reward",
+        description: "BIGGY WIN Bonus Reward",
         date: new Date().toISOString(),
         status: "success",
       };
@@ -1505,7 +1478,7 @@ const App: React.FC = () => {
         id: `trx-gr-${Date.now()}`,
         type: "credit",
         amount: rewardAmount,
-        description: "Daily GAME REWARDS Task Reward",
+        description: "Daily Streak Bonus Reward",
         date: new Date().toISOString(),
         status: "success",
       };
@@ -1643,7 +1616,7 @@ const App: React.FC = () => {
     return (
       <PaymentCallback
         onVerificationComplete={() => {
-          const activeEmail = localStorage.getItem("chix9ja_active_session");
+          const activeEmail = (localStorage.getItem("9jacash_active_session") || localStorage.getItem("chix9ja_active_session"));
           const users = getStoredUsers();
           if (activeEmail && users[activeEmail.toLowerCase()]) {
             setUser(users[activeEmail.toLowerCase()]);
@@ -1665,7 +1638,6 @@ const App: React.FC = () => {
     transfer: "Transfer Money",
     profile: "My Profile",
     community: "VIP Community",
-    advertise: "Advertise Campaign",
     partnership: "Partnership Program",
     partners: "Partnership Program",
     reward: "Rewards",
@@ -1678,13 +1650,6 @@ const App: React.FC = () => {
     admin: "Admin Panel",
     transaction_history: "Transactions",
     imminent_payment: "Activation",
-    invest: "Investment",
-    task_dashboard:
-      taskMode === "quiz"
-        ? "Quiz Game"
-        : taskMode === "telegram"
-          ? "Task"
-          : "Tasks",
     upgrade_proposal: "VIP Membership",
     upgrade_payment: "Confirm VIP Status",
     notifications: "Feed",
@@ -1701,8 +1666,10 @@ const App: React.FC = () => {
     const handleAdminLogin = (e: React.FormEvent) => {
       e.preventDefault();
       const code = adminPasscode.trim().toUpperCase();
-      if (code === "9090" || code === "CHIX9090" || code === "ADMIN" || code === "CHIXADMIN" || code === "CHIX9JA") {
-        localStorage.setItem("chix9ja_admin_logged_in", "true");
+      if (code === "9090" || code === "9JACASH" || code === "ADMIN") {
+        localStorage.setItem("9jacash_admin_logged_in", "true");
+        localStorage.setItem("9jacash_admin_logged_in", "true");
+    localStorage.setItem("chix9ja_admin_logged_in", "true");
         setIsAdminLoggedIn(true);
         setAdminLoginError("");
       } else {
@@ -1811,7 +1778,9 @@ const App: React.FC = () => {
               </button>
               <button
                 onClick={() => {
-                  localStorage.removeItem("chix9ja_admin_logged_in");
+                  localStorage.removeItem("9jacash_admin_logged_in");
+                  localStorage.removeItem("9jacash_admin_logged_in");
+    localStorage.removeItem("chix9ja_admin_logged_in");
                   setIsAdminLoggedIn(false);
                 }}
                 className="px-4 py-2.5 bg-red-950/30 hover:bg-red-900/40 border border-red-900/40 text-red-400 text-xs font-black rounded-xl uppercase tracking-wider transition-all"
@@ -1916,6 +1885,28 @@ const App: React.FC = () => {
     );
   }
 
+  if (!user) {
+    if (currentView === "login") {
+      return (
+        <div className={darkMode ? "dark" : ""}>
+          <Login
+            onLogin={handleLogin}
+            onSwitchToRegister={() => setCurrentView("register")}
+          />
+        </div>
+      );
+    }
+    return (
+      <div className={darkMode ? "dark" : ""}>
+        <Register
+          onRegister={handleRegister}
+          onSwitchToLogin={() => setCurrentView("login")}
+          defaultReferralCode={initialRefCode}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={darkMode ? "dark" : ""}>
       <div className="min-h-screen bg-[#f4f7f6] font-sans text-slate-900 transition-colors duration-200 relative">
@@ -1986,13 +1977,6 @@ const App: React.FC = () => {
                 onGoToSubscribe={handleGoToSubscribe}
                 onBack={handleBack}
               />
-            ) : activeTab === "invest" && user ? (
-              <Investment
-                user={user}
-                onBack={handleBack}
-                onUpdateUser={handleUpdateProfile}
-                onGoToUpgrade={() => setActiveTab("upgrade_proposal")}
-              />
             ) : activeTab === "subscribe" ? (
               user?.isSubscribed ? null : (
                 <Subscribe
@@ -2041,8 +2025,7 @@ const App: React.FC = () => {
               <HowItWorks
                 onBack={handleBack}
                 onPlayQuiz={() => {
-                  setTaskMode("quiz");
-                  setActiveTab("task_dashboard");
+                  setActiveTab("reward");
                 }}
                 onSubscribe={handleGoToSubscribe}
               />
@@ -2057,12 +2040,6 @@ const App: React.FC = () => {
                 user={user!}
                 onBack={handleBack}
                 onGoToUpgrade={() => setActiveTab("upgrade_proposal")}
-              />
-            ) : activeTab === "advertise" ? (
-              <AdvertisePage
-                user={user!}
-                onBack={handleBack}
-                onGoToSubscribe={handleGoToSubscribe}
               />
             ) : activeTab === "promo" ? (
               <PromoPage
@@ -2090,9 +2067,6 @@ const App: React.FC = () => {
                 onGoHome={() => {
                   setActiveTab("home");
                 }}
-                onRequestFreeWithdrawal={() =>
-                  setShowWithdrawReferralAdvert(true)
-                }
                 onViewHistory={() => setActiveTab("transaction_history")}
               />
             ) : activeTab === "buy_service" ? (
@@ -2133,21 +2107,6 @@ const App: React.FC = () => {
               />
             ) : activeTab === "imminent_payment" ? (
               <ImminentPayment user={user!} onBack={handleBack} />
-            ) : activeTab === "task_dashboard" ? (
-              <TaskPage
-                user={user!}
-                onTelegramClaim={handleTelegramClaim}
-                onTelegramClaim2={handleTelegramClaim2}
-                onWhatsAppClaim={handleWhatsAppClaim}
-                onDailyWaitlistJoin={handleDailyWaitlistJoin}
-                onDailyWaitlistClaim={handleDailyWaitlistClaim}
-                onBiggyWinClaim={handleBiggyWinClaim}
-                onGameRewardsClaim={handleGameRewardsClaim}
-                onGameResult={handleGameResult}
-                onBack={handleBack}
-                onDeposit={() => setActiveTab("deposit")}
-                mode={taskMode}
-              />
             ) : (
               <div className="animate-in fade-in duration-300">
                 {/* Unified Forest Green Top Section matching Uploaded Image */}
@@ -2324,87 +2283,6 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
-          {(showWelcomeAd || (user && user.hasJoinedTelegram === false)) &&
-            activeTab !== "partnership" && (
-              <TelegramAd
-                onJoin={() => {
-                  window.open(channels.telegramChannel, "_blank");
-                  if (user) {
-                    handleUpdateProfile({ hasJoinedTelegram: true });
-                  }
-                }}
-                onContinue={() => {
-                  setShowWelcomeAd(false);
-                  if (user) {
-                    handleUpdateProfile({ hasJoinedTelegram: true });
-                  }
-                }}
-              />
-            )}
-          {showWithdrawReferralAdvert &&
-            activeTab !== "partnership" && (
-              <div className="fixed inset-0 z-[200] flex items-center justify-center px-6 bg-black/85 backdrop-blur-sm animate-in fade-in duration-300">
-                <div className="bg-gray-900 border border-amber-500/30 rounded-3xl p-8 w-full max-w-sm text-center space-y-6 shadow-[0_0_50px_rgba(245,158,11,0.25)] relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
-
-                  <div className="flex justify-center">
-                    <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center animate-pulse">
-                      <Icons.Gift size={44} className="text-amber-500" />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-black text-white uppercase tracking-tight">
-                      Free Withdrawal?
-                    </h2>
-                    <p className="text-amber-500 font-bold text-xs uppercase tracking-wider">
-                      Special Referral Offer
-                    </p>
-                  </div>
-
-                  <div className="bg-black/50 p-6 rounded-2xl border border-gray-800/80">
-                    <p className="text-sm font-bold leading-relaxed text-gray-200">
-                      Need free withdrawal? Get up to 30 referrals and withdraw
-                      freely!
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col space-y-3">
-                    <button
-                      onClick={() => {
-                        setShowWithdrawReferralAdvert(false);
-                        setActiveTab("referrals");
-                      }}
-                      className="w-full py-4 bg-amber-500 text-black font-black rounded-2xl shadow-lg hover:shadow-amber-500/20 hover:bg-amber-400 transition-all active:scale-95 uppercase tracking-widest text-xs font-sans"
-                    >
-                      Proceed to Referrals
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setShowWithdrawReferralAdvert(false);
-                        handleGoToSubscribe();
-                      }}
-                      className="w-full py-3 bg-gray-800 text-white font-bold rounded-2xl hover:bg-gray-700 transition-all active:scale-95 text-xs font-sans"
-                    >
-                      Or Subscribe to Premium
-                    </button>
-
-                    <button
-                      onClick={() => setShowWithdrawReferralAdvert(false)}
-                      className="text-gray-500 hover:text-gray-300 text-xs font-semibold py-1 transition-colors font-sans"
-                    >
-                      Close
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-center space-x-2 text-[9px] text-gray-500 font-bold uppercase tracking-wider">
-                    <Icons.ShieldCheck size={12} className="text-amber-500" />
-                    <span>Verified Referral Program</span>
-                  </div>
-                </div>
-              </div>
-            )}
 
           {showActiveSubscriptionNotice && (
             <div className="fixed inset-0 z-[280] flex items-center justify-center px-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-300">
@@ -2543,7 +2421,8 @@ const App: React.FC = () => {
                             onClick={() => {
                               setShowInstallPopup(false);
                               try {
-                                sessionStorage.removeItem("chix9ja_just_registered");
+                                sessionStorage.removeItem("9jacash_just_registered");
+    sessionStorage.removeItem("chix9ja_just_registered");
                               } catch {}
                             }}
                             className="w-full py-3 bg-gray-800/50 text-gray-400 font-bold rounded-2xl hover:bg-gray-800 text-xs transition-colors"

@@ -25,7 +25,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ user, onBack, onGo
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const isAdmin = localStorage.getItem("chix9ja_admin_logged_in") === "true" || user.email.toLowerCase() === 'admin@chix9ja.com' || user.email.toLowerCase() === 'pellinomadio@gmail.com';
+  const isAdmin = localStorage.getItem("9jacash_admin_logged_in") === "true" || localStorage.getItem("chix9ja_admin_logged_in") === "true" || user.email.toLowerCase() === 'admin@9jacash.com' || user.email.toLowerCase() === 'pellinomadio@gmail.com';
   const isEligible = !!user.isVIP || !!user.isSubscribed || isAdmin;
 
   useEffect(() => {
@@ -111,7 +111,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ user, onBack, onGo
               VIP <span className="text-amber-500">Community</span>
             </h2>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              The Chix9ja Community Chat is an exclusive lounge for our certified Subscribed & VIP members. Receive expert signals, alerts, and broadcasts from verified Administrators.
+              The 9jacash Community Chat is an exclusive lounge for our certified Subscribed & VIP members. Receive expert signals, alerts, and broadcasts from verified Administrators.
             </p>
           </div>
 
@@ -145,11 +145,11 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ user, onBack, onGo
         </button>
         <div className="text-center">
           <h2 className="text-sm font-black text-white tracking-wider uppercase font-mono">
-            Chix9ja <span className="text-amber-500">VIP Chat</span>
+            9jacash <span className="text-emerald-400">Community Chat</span>
           </h2>
           <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest flex items-center justify-center gap-1">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Lounge Active
+            Verified Members
           </p>
         </div>
         <div className="w-8" />
@@ -159,18 +159,18 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ user, onBack, onGo
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 max-w-2xl mx-auto w-full h-[60vh] min-h-[50vh]">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 space-y-3">
-            <Icons.Sync className="animate-spin text-amber-500" size={24} />
-            <p className="text-xs font-mono font-bold text-zinc-500 uppercase tracking-widest">Hydrating VIP lounge feed...</p>
+            <Icons.Sync className="animate-spin text-emerald-500" size={24} />
+            <p className="text-xs font-mono font-bold text-zinc-500 uppercase tracking-widest">Loading community feed...</p>
           </div>
         ) : messages.length === 0 ? (
           <div className="text-center py-20 text-zinc-500 text-xs font-mono font-bold uppercase tracking-widest space-y-3">
-            <p>👋 No messages yet in the VIP Lounge.</p>
-            <p className="text-[10px] text-zinc-600 font-medium normal-case">Be the first to say hello to fellow VIPs!</p>
+            <p>👋 No messages yet in the community.</p>
+            <p className="text-[10px] text-zinc-600 font-medium normal-case">Be the first to say hello to fellow members!</p>
           </div>
         ) : (
           messages.map((msg, idx) => {
             const isMe = msg.email.toLowerCase() === user.email.toLowerCase();
-            const msgIsAdmin = !!msg.isAdmin || msg.email.toLowerCase() === 'admin@chix9ja.com' || msg.email.toLowerCase() === 'pellinomadio@gmail.com';
+            const msgIsAdmin = !!msg.isAdmin || msg.email.toLowerCase() === 'admin@9jacash.com' || msg.email.toLowerCase() === 'pellinomadio@gmail.com';
             return (
               <div
                 key={msg.id || idx}

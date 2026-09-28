@@ -109,7 +109,7 @@ const GiveawayClaimRow: React.FC<{
 
 const getCachedAdminUsers = (): User[] => {
   try {
-    const existingUsersStr = localStorage.getItem('chix9ja_users');
+    const existingUsersStr = localStorage.getItem('9jacash_users') || (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
     if (existingUsersStr) {
       const parsed = JSON.parse(existingUsersStr);
       if (Array.isArray(parsed)) {
@@ -126,7 +126,7 @@ const getCachedAdminUsers = (): User[] => {
 
 const getInitialAdminAuth = (): boolean => {
   try {
-    return localStorage.getItem('chix9ja_admin_session') === 'true';
+    return localStorage.getItem('9jacash_admin_session') === 'true' || (localStorage.getItem("9jacash_admin_session") || localStorage.getItem("chix9ja_admin_session")) === 'true';
   } catch (e) {
     return false;
   }
@@ -186,7 +186,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         } else {
           userMap.set(email, {
             email: email,
-            name: proof.userName || 'Chix9ja User',
+            name: proof.userName || '9jacash User',
             password: '••••',
             balance: 0,
             pendingActivation: (proof.type as any) || 'subscription_monthly',
@@ -196,7 +196,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
             pendingDeposit: proof.type === 'deposit' ? {
               id: proof.id,
               userEmail: email,
-              userName: proof.userName || 'Chix9ja User',
+              userName: proof.userName || '9jacash User',
               amount: proof.amount,
               paymentProof: proof.paymentProof,
               status: 'pending',
@@ -223,7 +223,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         } else {
           userMap.set(email, {
             email: email,
-            name: dep.userName || 'Chix9ja User',
+            name: dep.userName || '9jacash User',
             password: '••••',
             balance: 0,
             pendingActivation: 'deposit',
@@ -262,8 +262,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
   const [filterType, setFilterType] = useState<'all' | 'pending_verification' | 'unsubscribed' | 'restricted'>('all');
   const [searchEmail, setSearchEmail] = useState('');
   const [showPendingSubPage, setShowPendingSubPage] = useState(false);
-  const [showAdvertsSubPage, setShowAdvertsSubPage] = useState(false);
-  const [pendingAdverts, setPendingAdverts] = useState<any[]>([]);
 
   const [visibleUsersCount, setVisibleUsersCount] = useState(30);
   const [inviteUserEmail, setInviteUserEmail] = useState<string | null>(null);
@@ -371,7 +369,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
     try {
       await addDoc(collection(db, 'community_chats'), {
         name: 'System Administrator 👑',
-        email: 'admin@chix9ja.com',
+        email: 'admin@9jacash.com',
         message: communityMessage.trim(),
         isAdmin: true,
         timestamp: serverTimestamp() || Date.now()
@@ -396,31 +394,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
       alert("Failed to toggle giveaway status.");
     } finally {
       setIsUpdatingGiveaway(false);
-    }
-  };
-
-  const handleResolveAdvert = async (id: string, status: 'approved' | 'declined' | 'stopped') => {
-    try {
-      await setDoc(doc(db, 'adverts', id), { status }, { merge: true });
-
-      let statusLabel = 'Declined';
-      if (status === 'approved') statusLabel = 'Approved & Set Live on App';
-      if (status === 'stopped') statusLabel = 'Stopped';
-      alert(`Advert status updated to: ${statusLabel}!`);
-    } catch (err) {
-      console.error("Error resolving advert:", err);
-      alert("Failed to resolve advert: " + (err instanceof Error ? err.message : String(err)));
-    }
-  };
-
-  const handleDeleteAdvert = async (id: string) => {
-    if (!confirm("Are you sure you want to permanently delete this advert?")) return;
-    try {
-      await deleteDoc(doc(db, 'adverts', id));
-      alert("Advert deleted successfully!");
-    } catch (err) {
-      console.error("Error deleting advert:", err);
-      alert("Failed to delete advert: " + (err instanceof Error ? err.message : String(err)));
     }
   };
 
@@ -541,17 +514,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
             setGiveawayRequests(list);
         });
 
-        // Real-time adverts fetch
-        const unsubAdverts = onSnapshot(collection(db, 'adverts'), (querySnapshot) => {
-            const list: any[] = [];
-            querySnapshot.forEach((doc) => {
-                list.push({ id: doc.id, ...doc.data() });
-            });
-            // Sort by timestamp descending
-            list.sort((a: any, b: any) => new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime());
-            setPendingAdverts(list);
-        });
-
         // Real-time payment proofs fetch
         const unsubPaymentProofs = onSnapshot(collection(db, 'payment_proofs'), (querySnapshot) => {
             const pendingProofs: any[] = [];
@@ -583,7 +545,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         return () => {
             unsubscribe();
             unsubGiveaway();
-            unsubAdverts();
             unsubPaymentProofs();
             unsubDeposits();
             clearInterval(interval);
@@ -608,11 +569,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         setSyncProgress(65);
         setSyncStatusText(`Retrieved ${globalUsers.length} users. Fetching receipts and verification logs...`);
 
-        const [depositsSnap, proofsSnap, giveawaysSnap, advertsSnap] = await Promise.all([
+        const [depositsSnap, proofsSnap, giveawaysSnap] = await Promise.all([
             getDocs(collection(db, 'deposits')),
             getDocs(collection(db, 'payment_proofs')),
-            getDocs(collection(db, 'giveaways')),
-            getDocs(collection(db, 'adverts'))
+            getDocs(collection(db, 'giveaways'))
         ]);
 
         setSyncProgress(85);
@@ -637,11 +597,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         giveList.sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime());
         setGiveawayRequests(giveList);
 
-        const adList: any[] = [];
-        advertsSnap.forEach((d) => adList.push({ id: d.id, ...d.data() }));
-        adList.sort((a, b) => new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime());
-        setPendingAdverts(adList);
-
         setRawUsers(globalUsers);
 
         setSyncProgress(100);
@@ -655,7 +610,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         console.error("Error during manual refresh:", err);
         setSyncProgress(100);
         setSyncStatusText('Loaded from local storage cache');
-        const existingUsersStr = localStorage.getItem('chix9ja_users');
+        const existingUsersStr = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
         const existingUsers = existingUsersStr ? JSON.parse(existingUsersStr) : {};
         setRawUsers(Object.values(existingUsers));
         setTimeout(() => {
@@ -684,7 +639,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
     };
 
     // Update local cache
-    const existingUsersStr = localStorage.getItem('chix9ja_users');
+    const existingUsersStr = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
     const existingUsers = existingUsersStr ? JSON.parse(existingUsersStr) : {};
     existingUsers[emailKey] = userToSave;
     localStorage.setItem('chix9ja_users', JSON.stringify(existingUsers));
@@ -716,7 +671,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
     if (password === 'MAVELL999') {
         setIsAuthenticated(true);
         try {
-            localStorage.setItem('chix9ja_admin_session', 'true');
+            localStorage.setItem("9jacash_admin_session", 'true');
+    localStorage.setItem("chix9ja_admin_session", 'true');
         } catch (e) {}
         setError('');
     } else {
@@ -1002,9 +958,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
     } else if (type === 'imminent_payment') {
         updatedUser.deactivationDate = undefined;
         updatedUser.imminentDeactivationExpiry = undefined;
-    } else if (type === 'investment') {
-        updatedUser.isRestricted = false;
-        updatedUser.pendingInvestmentStep = null;
     } else if (type === 'deposit' || userObj.pendingDeposit) {
         const depositAmt = userObj.pendingDeposit?.amount || userObj.pendingPaymentAmount || 0;
         updatedUser.balance = (updatedUser.balance || 0) + depositAmt;
@@ -1013,7 +966,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
             id: 'tx_dep_' + Math.random().toString(36).substring(2, 9),
             type: 'credit',
             amount: depositAmt,
-            description: 'Chix9ja Account Deposit',
+            description: '9jacash Account Deposit',
             date: new Date().toISOString(),
             status: 'success'
         };
@@ -1021,7 +974,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         let txs = updatedUser.transactions || [];
         let updatedTxList = txs.map((t: Transaction) => {
             if (t.amount === depositAmt && t.status === 'pending') {
-                return { ...t, status: 'success' as const, description: 'Chix9ja Account Deposit' };
+                return { ...t, status: 'success' as const, description: '9jacash Account Deposit' };
             }
             return t;
         });
@@ -1035,12 +988,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
     }
     
     let mailSubject = "Account Update Alert";
-    let mailBody = `Dear ${updatedUser.name},\n\nYour recent request has been evaluated and officially approved by the Chix9ja Admin Team!\n\nAll security systems configured successfully.`;
+    let mailBody = `Dear ${updatedUser.name},\n\nYour recent request has been evaluated and officially approved by the 9jacash Admin Team!\n\nAll security systems configured successfully.`;
 
     if (type === 'deposit') {
         const depositAmt = userObj.pendingDeposit?.amount || userObj.pendingPaymentAmount || 0;
         mailSubject = `💰 Deposit Approved: ₦${depositAmt.toLocaleString()} Credited!`;
-        mailBody = `Dear ${updatedUser.name},\n\nYour deposit of ₦${depositAmt.toLocaleString()} has been verified and officially approved by the Chix9ja Treasury!\n\nYour Chix9ja account balance has been credited with ₦${depositAmt.toLocaleString()}.\n\nThank you for choosing Chix9ja!\n\nBest regards,\nThe Chix9ja Treasury Department`;
+        mailBody = `Dear ${updatedUser.name},\n\nYour deposit of ₦${depositAmt.toLocaleString()} has been verified and officially approved by the 9jacash Treasury!\n\nYour 9jacash account balance has been credited with ₦${depositAmt.toLocaleString()}.\n\nThank you for choosing 9jacash!\n\nBest regards,\nThe 9jacash Treasury Department`;
     } else if (type === 'subscription_weekly' || type === 'subscription_monthly' || type === 'subscription_quarterly' || type === 'subscription_yearly' || type === 'subscription_promo') {
         let planLabel = 'Monthly Pro';
         if (type === 'subscription_weekly') planLabel = 'Weekly Saver';
@@ -1049,19 +1002,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         if (type === 'subscription_promo') planLabel = 'Promo Subscription';
         
         mailSubject = `Subscription Approved: ${planLabel} Active! 🚀`;
-        mailBody = `Dear ${updatedUser.name},\n\nWe are pleased to inform you that your manual payment transfer has been verified! Your ${planLabel} subscription is now fully ACTIVE on our system.\n\nEnjoy lightning-fast withdrawals, custom limits, and automatic transaction validation on Chix9ja.\n\nThank you for choosing us!\n\nBest regards,\nThe Chix9ja Security & Treasury Department`;
+        mailBody = `Dear ${updatedUser.name},\n\nWe are pleased to inform you that your manual payment transfer has been verified! Your ${planLabel} subscription is now fully ACTIVE on our system.\n\nEnjoy lightning-fast withdrawals, custom limits, and automatic transaction validation on 9jacash.\n\nThank you for choosing us!\n\nBest regards,\nThe 9jacash Security & Treasury Department`;
     } else if (type === 'vip' || type === 'vip1' || type === 'vip2' || type === 'vip3') {
         mailSubject = "💎 VIP Membership Activated Successfully!";
-        mailBody = `Dear ${updatedUser.name},\n\nCongratulations! Your VIP upgrade payment has been verified and officially approved.\n\nYour account is now endowed with a ₦1,000,000 Life-time VIP Business Fund, and your pending withdrawal is now undergoing Central Bank of Nigeria (CBN) Tax Clearance.\n\nPlease navigate to your Profile and link your withdrawal account for the payout to be finalized.\n\nBest regards,\nThe Chix9ja Executive Board`;
+        mailBody = `Dear ${updatedUser.name},\n\nCongratulations! Your VIP upgrade payment has been verified and officially approved.\n\nYour account is now endowed with a ₦1,000,000 Life-time VIP Business Fund, and your pending withdrawal is now undergoing Central Bank of Nigeria (CBN) Tax Clearance.\n\nPlease navigate to your Profile and link your withdrawal account for the payout to be finalized.\n\nBest regards,\nThe 9jacash Executive Board`;
     } else if (type === 'link_account') {
         mailSubject = "🔒 Withdrawal bank account integrated successfully!";
-        mailBody = `Dear ${updatedUser.name},\n\nWe are pleased to notify you that your Bank Account Integration fee has been verified and your custom withdrawal node is now online and active.\n\nYou can initiate secure, automated transfers directly to your linked bank account. All network ports have been updated accordingly.\n\nWarm regards,\nThe Chix9ja Engineering Team`;
+        mailBody = `Dear ${updatedUser.name},\n\nWe are pleased to notify you that your Bank Account Integration fee has been verified and your custom withdrawal node is now online and active.\n\nYou can initiate secure, automated transfers directly to your linked bank account. All network ports have been updated accordingly.\n\nWarm regards,\nThe 9jacash Engineering Team`;
     } else if (type === 'imminent_payment') {
         mailSubject = "🛡️ Security Incident Cleared: Network Node Secure";
-        mailBody = `Dear ${updatedUser.name},\n\nWe have received your payment proof regarding the recent imminent deactivation. Your file check is positive.\n\nAll restrictions on your profile have been automatically revoked and cancelled. Your digital node is once again fully compliant and healthy.\n\nBest regards,\nThe Chix9ja Central Security Grid`;
-    } else if (type === 'investment') {
-        mailSubject = "📈 Investment Profile Activated Successfully!";
-        mailBody = `Dear ${updatedUser.name},\n\nWe have received your validation transfer. Your Investment Validation process has completed and all account restrictions have been cleared.\n\nYou can now seamlessly access and trade high-yielding investment instruments across the central Chix9ja exchange.\n\nHappy earning!\n\nBest regards,\nThe Chix9ja Global Asset Management Team`;
+        mailBody = `Dear ${updatedUser.name},\n\nWe have received your payment proof regarding the recent imminent deactivation. Your file check is positive.\n\nAll restrictions on your profile have been automatically revoked and cancelled. Your digital node is once again fully compliant and healthy.\n\nBest regards,\nThe 9jacash Central Security Grid`;
     }
 
     updatedUser.pendingActivation = null;
@@ -1234,7 +1184,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         message: customMsg.trim(),
         date: new Date().toISOString(),
         read: false,
-        sender: 'Chix9ja Verification Desk'
+        sender: '9jacash Verification Desk'
       };
 
       const updatedList = [newNotifItem, ...(userObj.adminNotifications || [])];
@@ -1453,7 +1403,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
                     </div>
                     <div>
                         <h2 className="text-3xl font-black text-white tracking-widest uppercase">Admin <span className="text-emerald-450 text-emerald-400 font-extrabold font-mono">Gate</span></h2>
-                        <p className="text-[10px] text-zinc-400 font-mono tracking-wider uppercase mt-1">chix9ja administrative terminal</p>
+                        <p className="text-[10px] text-zinc-400 font-mono tracking-wider uppercase mt-1">9jacash administrative terminal</p>
                     </div>
                 </div>
 
@@ -1621,7 +1571,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
                                                       const readableType = pUser.pendingActivation
                                                           ? pUser.pendingActivation.replace('subscription_', '').replace('_', ' ').toUpperCase()
                                                           : 'verification';
-                                                      setCustomInviteMsg(`Hello ${pUser.name},\n\nWe noticed your ${readableType} activation request is pending. Kindly ensure your payment proof is valid so we can immediately upgrade your dashboard and restore full privilege operations.\n\nWarm regards,\nChix9ja Verification Team`);
+                                                      setCustomInviteMsg(`Hello ${pUser.name},\n\nWe noticed your ${readableType} activation request is pending. Kindly ensure your payment proof is valid so we can immediately upgrade your dashboard and restore full privilege operations.\n\nWarm regards,\n9jacash Verification Team`);
                                                   }
                                               }}
                                               className={`px-3.5 py-2 border text-[10px] font-mono font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${inviteUserEmail === pUser.email ? 'bg-amber-600 border-amber-600 text-black font-extrabold' : 'bg-zinc-900 text-amber-500 border-amber-500/20 hover:bg-zinc-800'}`}
@@ -1651,21 +1601,21 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
                                               <div className="flex flex-wrap gap-1.5">
                                                   <button
                                                       type="button"
-                                                      onClick={() => setCustomInviteMsg(`Hello ${pUser.name},\n\nWe noticed your receipt is blurry. Please click on the subscribe button again and upload a clear, high-resolution screenshot/image of your successful bank transfer so we can activate your account immediately.\n\nWarm regards,\nChix9ja Central Treasury`)}
+                                                      onClick={() => setCustomInviteMsg(`Hello ${pUser.name},\n\nWe noticed your receipt is blurry. Please click on the subscribe button again and upload a clear, high-resolution screenshot/image of your successful bank transfer so we can activate your account immediately.\n\nWarm regards,\n9jacash Central Treasury`)}
                                                       className="text-[8.5px] font-mono bg-zinc-900 hover:bg-zinc-800 text-zinc-350 px-2 py-1 rounded-md border border-zinc-800"
                                                   >
                                                       Blurry Receipt
                                                   </button>
                                                   <button
                                                       type="button"
-                                                      onClick={() => setCustomInviteMsg(`Hello ${pUser.name},\n\nKindly note that your transfer is pending confirmation. To speed up verification, make sure the sender name on your payment matches your profile, or reply to support with transaction references.\n\nBest regards,\nChix9ja Operations Desk`)}
+                                                      onClick={() => setCustomInviteMsg(`Hello ${pUser.name},\n\nKindly note that your transfer is pending confirmation. To speed up verification, make sure the sender name on your payment matches your profile, or reply to support with transaction references.\n\nBest regards,\n9jacash Operations Desk`)}
                                                       className="text-[8.5px] font-mono bg-zinc-900 hover:bg-zinc-800 text-zinc-350 px-2 py-1 rounded-md border border-zinc-800"
                                                   >
                                                       Awaiting Transfer
                                                   </button>
                                                   <button
                                                       type="button"
-                                                      onClick={() => setCustomInviteMsg(`Dear ${pUser.name},\n\nYour account linkage process has started. In order to complete verification and enable unlimited automated withdrawals to your bank, please upload your verification fee receipt.\n\nWith respect,\nChix9ja Security Desk`)}
+                                                      onClick={() => setCustomInviteMsg(`Dear ${pUser.name},\n\nYour account linkage process has started. In order to complete verification and enable unlimited automated withdrawals to your bank, please upload your verification fee receipt.\n\nWith respect,\n9jacash Security Desk`)}
                                                       className="text-[8.5px] font-mono bg-zinc-900 hover:bg-zinc-800 text-zinc-350 px-2 py-1 rounded-md border border-zinc-800"
                                                   >
                                                       Link Bank Fee
@@ -1688,7 +1638,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
                                               </div>
                                               <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
                                                   <a
-                                                      href={`mailto:${pUser.email}?subject=Chix9ja Account Notice&body=${encodeURIComponent(customInviteMsg)}`}
+                                                      href={`mailto:${pUser.email}?subject=9jacash Account Notice&body=${encodeURIComponent(customInviteMsg)}`}
                                                       className="px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-350 text-[10px] font-mono rounded-lg border border-zinc-800 transition-all flex items-center space-x-1"
                                                   >
                                                       <span>Send Email</span>
@@ -1795,233 +1745,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
     );
   }
 
-  if (showAdvertsSubPage) {
-    return (
-      <div className="min-h-screen bg-black text-zinc-200 pb-24 font-sans relative overflow-hidden animate-in fade-in duration-200">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-fuchsia-500/5 rounded-full blur-[140px] pointer-events-none" />
-          <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-fuchsia-500/5 rounded-full blur-[140px] pointer-events-none" />
-          
-          <div className="max-w-4xl mx-auto px-4 py-8 space-y-6 relative z-10">
-              {/* Top Command Bar */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-zinc-800/80 pb-6">
-                  <div className="space-y-1 text-left">
-                      <div className="flex items-center space-x-2.5">
-                          <span className="h-2 w-2 bg-fuchsia-500 rounded-full animate-pulse" />
-                          <span className="text-[9px] font-mono font-black uppercase text-fuchsia-400 tracking-widest block bg-fuchsia-950/40 border border-fuchsia-500/20 px-2 py-0.5 rounded-md">
-                              Clearance: Level Alpha
-                          </span>
-                      </div>
-                      <h2 className="text-3xl font-black text-white tracking-wider uppercase font-mono">
-                          Pending <span className="text-fuchsia-400">Adverts</span>
-                      </h2>
-                      <p className="text-xs text-zinc-400 font-medium">Approve or Decline sponsored advertisements and payment proofs submitted by VIP & Premium users.</p>
-                  </div>
-
-                  <button 
-                      onClick={() => setShowAdvertsSubPage(false)}
-                      className="py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 text-xs font-bold uppercase tracking-wider rounded-xl transition-all active:scale-[0.97]"
-                  >
-                      ← Back Panel
-                  </button>
-              </div>
-
-              {/* Advert Approvals list */}
-              <div className="space-y-4">
-                  {pendingAdverts.length === 0 ? (
-                      <div className="bg-zinc-950 border border-zinc-900 rounded-3xl p-16 text-center space-y-4">
-                          <div className="w-16 h-16 bg-fuchsia-500/10 rounded-full flex items-center justify-center mx-auto border border-fuchsia-500/20">
-                              <Megaphone className="text-fuchsia-500" size={28} />
-                          </div>
-                          <div className="space-y-1">
-                              <h3 className="font-extrabold text-white text-base">No Adverts Submitted</h3>
-                              <p className="text-xs text-zinc-500">There are no active or pending advertisement requests in the queue.</p>
-                          </div>
-                      </div>
-                  ) : (
-                      pendingAdverts.map((ad: any) => {
-                          const targetLink = ad.advertLink || ad.link || '';
-                          const fullUrl = targetLink ? (targetLink.startsWith('http') ? targetLink : `https://${targetLink}`) : '#';
-
-                          return (
-                              <div key={ad.id} className="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-6 hover:border-zinc-700/80 transition-all space-y-6 text-left">
-                                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-zinc-800 pb-4">
-                                      <div>
-                                          <div className="flex items-center space-x-2">
-                                              <h4 className="font-black text-white text-sm uppercase tracking-tight">{ad.name || 'Anonymous User'}</h4>
-                                              <span className="text-[10px] bg-zinc-800 text-zinc-400 border border-zinc-750 px-2 py-0.5 rounded font-mono font-bold">
-                                                  {ad.email}
-                                              </span>
-                                          </div>
-                                          <p className="text-[10px] text-zinc-500 font-mono mt-1">Submitted: {ad.timestamp ? new Date(ad.timestamp).toLocaleString() : 'N/A'}</p>
-                                      </div>
-                                      <div>
-                                          {ad.status === 'pending' ? (
-                                              <span className="text-[10px] font-black bg-amber-500/15 border border-amber-500/25 text-amber-500 px-3 py-1 rounded-full uppercase tracking-wider">
-                                                  Pending Review
-                                              </span>
-                                          ) : ad.status === 'approved' ? (
-                                              <span className="text-[10px] font-black bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 px-3 py-1 rounded-full uppercase tracking-wider animate-pulse">
-                                                  🟢 Live & Active
-                                              </span>
-                                          ) : ad.status === 'stopped' ? (
-                                              <span className="text-[10px] font-black bg-amber-500/15 border border-amber-500/25 text-amber-400 px-3 py-1 rounded-full uppercase tracking-wider">
-                                                  🛑 Stopped
-                                              </span>
-                                          ) : (
-                                              <span className="text-[10px] font-black bg-rose-500/15 border border-rose-500/25 text-rose-500 px-3 py-1 rounded-full uppercase tracking-wider">
-                                                  ❌ Declined
-                                              </span>
-                                          )}
-                                      </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                      {/* Left: Info details */}
-                                      <div className="space-y-4">
-                                          <div className="space-y-2">
-                                              <h5 className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-widest">Campaign Configuration</h5>
-                                              <div className="bg-zinc-950/80 border border-zinc-850 rounded-2xl p-4 space-y-2.5 font-mono text-[11px]">
-                                                  <p className="text-zinc-400 flex justify-between">
-                                                      <span>Daily Rate:</span> 
-                                                      <span className="text-white font-bold">₦{Number(ad.price || 0).toLocaleString()}</span>
-                                                  </p>
-                                                  <p className="text-zinc-400 flex justify-between">
-                                                      <span>Duration:</span> 
-                                                      <span className="text-white font-bold">{ad.days} Days</span>
-                                                  </p>
-                                                  <div className="border-t border-zinc-850 pt-2 flex justify-between text-xs font-bold text-fuchsia-400">
-                                                      <span>Total Budget:</span>
-                                                      <span>₦{Number(ad.totalCost || (ad.price * ad.days) || 0).toLocaleString()}</span>
-                                                  </div>
-                                              </div>
-                                          </div>
-
-                                          <div className="space-y-2">
-                                              <h5 className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-widest">Landing Page Link</h5>
-                                              <div className="bg-zinc-950/80 border border-zinc-850 rounded-2xl p-4 space-y-3">
-                                                  <p className="text-xs text-zinc-300 font-mono break-all font-semibold select-all bg-black p-2.5 rounded-xl border border-zinc-900">
-                                                      {targetLink || 'No landing page URL specified'}
-                                                  </p>
-                                                  {targetLink && (
-                                                      <a 
-                                                          href={fullUrl} 
-                                                          target="_blank" 
-                                                          rel="noreferrer"
-                                                          className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-95"
-                                                      >
-                                                          <ExternalLink size={14} />
-                                                          <span>Visit Landing Page</span>
-                                                      </a>
-                                                  )}
-                                              </div>
-                                          </div>
-                                      </div>
-
-                                      {/* Right: Uploaded media */}
-                                      <div className="space-y-4">
-                                          <div className="space-y-2">
-                                              <h5 className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-widest">Campaign Video Creative</h5>
-                                              <div className="bg-zinc-950/80 border border-zinc-850 rounded-2xl p-3 flex flex-col justify-center items-center">
-                                                  {ad.videoData ? (
-                                                      <div className="w-full space-y-2">
-                                                          <video 
-                                                              src={ad.videoData} 
-                                                              controls 
-                                                              className="w-full max-h-44 rounded-xl bg-black object-contain border border-zinc-800" 
-                                                          />
-                                                          <div className="text-[9px] text-zinc-500 font-mono text-center truncate">{ad.videoName || 'creative_video.mp4'}</div>
-                                                      </div>
-                                                  ) : (
-                                                      <div className="py-8 text-center text-xs text-zinc-600 font-mono">No video creative loaded</div>
-                                                  )}
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-
-                                  {/* Payment Proof Preview */}
-                                  {ad.paymentProof && (
-                                      <div className="space-y-2 border-t border-zinc-850 pt-4">
-                                          <h5 className="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-widest">Payment Proof (Receipt)</h5>
-                                          <div className="bg-zinc-950/80 border border-zinc-850 rounded-2xl p-3 max-w-sm">
-                                              <img 
-                                                  src={ad.paymentProof} 
-                                                  alt="Receipt proof" 
-                                                  className="w-full max-h-64 object-contain rounded-xl border border-zinc-800 hover:opacity-90 cursor-pointer" 
-                                                  onClick={() => window.open(ad.paymentProof, '_blank')}
-                                              />
-                                              <p className="text-[9px] text-zinc-500 text-center mt-2 font-mono">Click receipt image to view full resolution</p>
-                                          </div>
-                                      </div>
-                                  )}
-
-                                  {/* Controls */}
-                                  <div className="flex flex-col sm:flex-row items-center gap-3 border-t border-zinc-800/80 pt-4">
-                                      {ad.status === 'pending' && (
-                                          <>
-                                              <button 
-                                                  onClick={() => handleResolveAdvert(ad.id, 'approved')}
-                                                  className="w-full sm:flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
-                                              >
-                                                  <CheckCircle2 size={14} />
-                                                  <span>Approve & Set Live</span>
-                                              </button>
-                                              <button 
-                                                  onClick={() => handleResolveAdvert(ad.id, 'declined')}
-                                                  className="w-full sm:flex-1 py-3 px-4 bg-zinc-850 hover:bg-zinc-800 text-rose-400 border border-zinc-750 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
-                                              >
-                                                  <XCircle size={14} />
-                                                  <span>Decline Campaign</span>
-                                              </button>
-                                          </>
-                                      )}
-
-                                      {ad.status === 'approved' && (
-                                          <>
-                                              <button 
-                                                  onClick={() => handleResolveAdvert(ad.id, 'stopped')}
-                                                  className="w-full sm:flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
-                                              >
-                                                  <PauseCircle size={14} />
-                                                  <span>Stop Advert</span>
-                                              </button>
-                                              <button 
-                                                  onClick={() => handleResolveAdvert(ad.id, 'declined')}
-                                                  className="w-full sm:flex-1 py-3 px-4 bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-500/30 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
-                                              >
-                                                  <XCircle size={14} />
-                                                  <span>Cancel Advert</span>
-                                              </button>
-                                          </>
-                                      )}
-
-                                      {(ad.status === 'stopped' || ad.status === 'declined') && (
-                                          <button 
-                                              onClick={() => handleResolveAdvert(ad.id, 'approved')}
-                                              className="w-full sm:flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
-                                          >
-                                              <PlayCircle size={14} />
-                                              <span>Reactivate & Set Live</span>
-                                          </button>
-                                      )}
-
-                                      <button 
-                                          onClick={() => handleDeleteAdvert(ad.id)}
-                                          className="w-full sm:w-auto px-4 py-3 bg-red-950/40 hover:bg-red-950 border border-red-500/20 text-red-400 rounded-xl text-xs font-bold uppercase transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
-                                      >
-                                          <Trash size={14} />
-                                          <span>Purge</span>
-                                      </button>
-                                  </div>
-                              </div>
-                          );
-                      })
-                  )}
-              </div>
-          </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-black text-zinc-200 pb-24 font-sans select-none relative overflow-wrap-normal overflow-hidden">
@@ -2103,7 +1826,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
                         onClick={() => {
                             setIsAuthenticated(false);
                             try {
-                                localStorage.removeItem('chix9ja_admin_session');
+                                localStorage.removeItem("9jacash_admin_session");
+    localStorage.removeItem("chix9ja_admin_session");
                             } catch (e) {}
                         }} 
                         className="py-2 px-3.5 bg-rose-950/60 hover:bg-rose-900 hover:text-white text-rose-400 border border-rose-500/20 text-xs font-bold uppercase tracking-wider rounded-xl transition-all active:scale-[0.97] cursor-pointer"
@@ -2128,23 +1852,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
                     <span className="text-[9.5px] text-zinc-500 font-mono mt-1 block group-hover:text-emerald-400">Click to view all →</span>
                     <div className="absolute right-3.5 bottom-3 text-emerald-500/5 group-hover:text-emerald-500/20 transition-all">
                         <ShieldAlert size={28} />
-                    </div>
-                </button>
-
-                <button 
-                    onClick={() => setShowAdvertsSubPage(true)}
-                    className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 shadow-[0_0_15px_-3px_rgba(217,70,239,0.02)] relative overflow-hidden hover:border-fuchsia-500/50 hover:bg-zinc-900 transition-all text-left w-full cursor-pointer group"
-                >
-                    <span className="text-[9px] font-bold text-zinc-400 group-hover:text-fuchsia-400 uppercase tracking-widest block font-mono font-bold">Adverts Queue</span>
-                    <span className="text-2xl font-black text-white font-mono block mt-1 flex items-center gap-1.5">
-                        {pendingAdverts.filter((ad: any) => ad.status === 'pending').length}
-                        {pendingAdverts.filter((ad: any) => ad.status === 'pending').length > 0 && <span className="inline-block w-2 h-2 rounded-full bg-fuchsia-500 animate-ping" />}
-                    </span>
-                    <span className="text-[9.5px] text-zinc-500 font-mono mt-1 block group-hover:text-fuchsia-400">Manage Adverts →</span>
-                    <div className="absolute right-3.5 bottom-3 text-fuchsia-500/5 group-hover:text-fuchsia-500/20 transition-all">
-                        <span className="text-fuchsia-500 opacity-20 group-hover:opacity-100 transition-opacity">
-                            <Icons.Megaphone size={28} />
-                        </span>
                     </div>
                 </button>
 
@@ -2353,49 +2060,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
                             className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-black font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-md shadow-emerald-600/10 disabled:opacity-40 active:scale-[0.98]"
                         >
                             {isUpdatingChannels ? 'Updating Channels...' : 'Synchronize Channels & Support'}
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            {/* VIP Community Broadcast Lounge Card */}
-            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-3xl shadow-lg border border-zinc-800 overflow-hidden">
-                <div className="p-4 bg-zinc-900/80 border-b border-zinc-800/80 flex items-center space-x-2">
-                    <Megaphone className="text-amber-500 stroke-[2.2]" size={15} />
-                    <h3 className="font-black text-white text-xs uppercase tracking-wider font-mono">VIP Community Broadcast Lounge</h3>
-                </div>
-                
-                <form onSubmit={handleSendCommunityMessage} className="p-5 space-y-4">
-                    <p className="text-[10px] text-zinc-400 font-medium font-mono leading-relaxed uppercase">
-                        Broadcast critical announcements, investment guidance, or greetings directly to subscribed/VIP users on the community page. This operates as a secure, verified channels feed.
-                    </p>
-
-                    <div className="space-y-1.5">
-                        <label className="text-[9px] font-mono font-bold text-zinc-400 uppercase tracking-widest block">Broadcast Message Body</label>
-                        <textarea
-                            rows={3}
-                            className="w-full text-xs p-3 rounded-xl border border-zinc-800 bg-black text-white outline-none focus:border-amber-500 transition-all font-medium"
-                            value={communityMessage}
-                            onChange={(e) => setCommunityMessage(e.target.value)}
-                            placeholder="Type premium alert message to display to subscribed community members..."
-                            maxLength={1000}
-                            required
-                        />
-                    </div>
-
-                    {communitySuccessMsg && (
-                        <div className="p-2.5 bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-[10px] uppercase font-bold tracking-tight rounded-xl text-center font-mono">
-                            ✓ {communitySuccessMsg}
-                        </div>
-                    )}
-
-                    <div className="flex justify-end pt-1">
-                        <button 
-                            type="submit" 
-                            disabled={!communityMessage.trim() || isSendingCommunity}
-                            className="w-full sm:w-auto px-6 py-3 bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-md shadow-amber-500/10 disabled:opacity-40 active:scale-[0.98] cursor-pointer"
-                        >
-                            {isSendingCommunity ? 'Transmitting Broadcast...' : 'Transmit Community Broadcast'}
                         </button>
                     </div>
                 </form>

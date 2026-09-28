@@ -53,7 +53,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, defaul
       return;
     }
 
-    const securePassword = `${password}_chix9ja_secure_salt`;
+    const securePassword = `${password}_9jacash_secure_salt`;
 
     // Check device registration limit (Max 5 accounts per device)
     let deviceAccounts: string[] = [];

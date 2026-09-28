@@ -39,7 +39,7 @@ const PaymentCallback: React.FC<PaymentCallbackProps> = ({ onVerificationComplet
         }
 
         // Get active user session to update correct profile
-        const activeEmail = localStorage.getItem('chix9ja_active_session');
+        const activeEmail = localStorage.getItem('9jacash_active_session') || localStorage.getItem('chix9ja_active_session');
         if (!activeEmail) {
           setStatus('failed');
           setErrorMessage('Active security session has expired. Please sign in again.');
@@ -47,7 +47,7 @@ const PaymentCallback: React.FC<PaymentCallbackProps> = ({ onVerificationComplet
         }
 
         const emailKey = activeEmail.toLowerCase().trim();
-        const storedUsersStr = localStorage.getItem('chix9ja_users');
+        const storedUsersStr = localStorage.getItem('9jacash_users') || localStorage.getItem('chix9ja_users');
         const storedUsers = storedUsersStr ? JSON.parse(storedUsersStr) : {};
         const currentUser: User = storedUsers[emailKey];
 
@@ -58,7 +58,7 @@ const PaymentCallback: React.FC<PaymentCallbackProps> = ({ onVerificationComplet
         }
 
         // Parse key details from txRef
-        // tx_ref is structured as: chix9ja-paymentType-timestamp-random
+        // tx_ref is structured as: 9jacash-paymentType-timestamp-random
         const refParts = txRef.split('-');
         const paymentType = refParts[1] || 'subscription';
 
@@ -71,7 +71,6 @@ const PaymentCallback: React.FC<PaymentCallbackProps> = ({ onVerificationComplet
         else if (paymentType === 'subscription_promo') expectedAmount = 7000;
         else if (paymentType === 'vip') expectedAmount = 20000;
         else if (paymentType === 'link_account') expectedAmount = 30700;
-        else if (paymentType === 'investment') expectedAmount = 22000;
         else if (paymentType === 'imminent_payment') {
           // Reactivation fee depends on active deactivation date
           const isDeactivated = currentUser.deactivationDate && Date.now() > currentUser.deactivationDate;
@@ -231,13 +230,6 @@ const PaymentCallback: React.FC<PaymentCallbackProps> = ({ onVerificationComplet
           }
           displayBenefitLabel = 'Withdraw bank account verification is complete. Automated payouts enabled.';
 
-        } else if (paymentType === 'investment') {
-          finalUser.isRestricted = false;
-          finalUser.pendingActivation = null;
-          finalUser.restrictionType = undefined;
-          finalUser.restrictionRestoreTime = undefined;
-          displayBenefitLabel = 'Investment validation checks are resolved. All portfolio restrictions deleted.';
-
         } else if (paymentType === 'imminent_payment') {
           // Clear imminent payment restriction metrics
           (finalUser as any).isDeactivated = false;
@@ -255,6 +247,7 @@ const PaymentCallback: React.FC<PaymentCallbackProps> = ({ onVerificationComplet
 
         // Save back to LocalStorage
         finalUsers[emailKey] = finalUser;
+        localStorage.setItem('9jacash_users', JSON.stringify(finalUsers));
         localStorage.setItem('chix9ja_users', JSON.stringify(finalUsers));
 
         // Perform Firestore Cloud Sync

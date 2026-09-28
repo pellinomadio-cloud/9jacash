@@ -48,7 +48,7 @@ const Subscribe: React.FC<SubscribeProps> = ({ onPlanSelect, userBalance }) => {
       duration: '30 Days Access', 
       recommended: true,
       limitDescription: 'Withdraw up to ₦2,000,000',
-      features: ['High Withdrawal Limits', 'Premium Tasks', '24/7 Priority Support'],
+      features: ['High Withdrawal Limits', 'Instant Settlements', '24/7 Priority Support'],
       icon: <Icons.Trophy size={24} />,
       color: 'from-green-glow to-emerald-400'
     },

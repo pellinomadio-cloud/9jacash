@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Icons } from './Icons';
-import { casinoAudio } from './casino/CasinoAudio';
+import { appAudio as casinoAudio } from './AudioEngine';
 import { User } from '../types';
 
 export interface SpinPrize {
@@ -11,7 +11,7 @@ export interface SpinPrize {
   colorDark: string;
   colorLight: string;
   textColor: string;
-  probabilityWeight: number; // for realistic weighted casino drops
+  probabilityWeight: number; // for weighted reward drops
 }
 
 export const SPIN_PRIZES: SpinPrize[] = [

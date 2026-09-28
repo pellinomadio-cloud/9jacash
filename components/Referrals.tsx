@@ -12,7 +12,7 @@ const Referrals: React.FC<ReferralsProps> = ({ user, onBack }) => {
   const [copiedLink, setCopiedLink] = useState(false);
 
   const referralCode = user.referralCode || user.email.split('@')[0].toUpperCase();
-  const referralLink = `https://chix9ja.online?ref=${referralCode}`;
+  const referralLink = `https://9jacash.online?ref=${referralCode}`;
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(referralCode)
@@ -104,7 +104,7 @@ const Referrals: React.FC<ReferralsProps> = ({ user, onBack }) => {
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">Official Referral Link</label>
-            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">chix9ja.online</span>
+            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">9jacash.online</span>
           </div>
           <div className="flex items-center space-x-2 bg-black border border-gray-800 rounded-xl p-2 pl-3">
             <span className="text-xs text-emerald-300 truncate flex-1 font-mono font-bold">{referralLink}</span>
@@ -127,13 +127,13 @@ const Referrals: React.FC<ReferralsProps> = ({ user, onBack }) => {
           </div>
           <div className="mt-2.5">
             <a
-              href={`https://wa.me/?text=${encodeURIComponent(`Join me on Chix9ja and get ₦10,000 instant bonus! Sign up using my official link: https://chix9ja.online?ref=${referralCode}`)}`}
+              href={`https://wa.me/?text=${encodeURIComponent(`Join me on 9jacash and get ₦43,000 instant bonus! Sign up using my official link: https://9jacash.online?ref=${referralCode}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-2.5 px-4 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/40 rounded-xl text-xs font-bold text-emerald-300 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
             >
               <Icons.Send size={14} className="text-emerald-400" />
-              <span>Share via WhatsApp (chix9ja.online)</span>
+              <span>Share via WhatsApp (9jacash.online)</span>
             </a>
           </div>
         </div>

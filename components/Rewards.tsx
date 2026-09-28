@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Icons } from './Icons';
 import { User } from '../types';
 import { FortuneWheel, SpinPrize } from './FortuneWheel';
-import { casinoAudio } from './casino/CasinoAudio';
+import { appAudio as casinoAudio } from './AudioEngine';
 
 interface RewardsProps {
   user: User;
@@ -235,7 +235,7 @@ export const Rewards: React.FC<RewardsProps> = ({
               <div className="flex items-center justify-center space-x-1.5 mb-1 text-amber-300">
                 <Icons.Sparkles size={14} className="animate-pulse" />
                 <span className="text-xs font-black uppercase tracking-widest text-glow-gold">
-                  CERTIFIED CASINO FORTUNE RADAR
+                  CERTIFIED 9JACASH FORTUNE RADAR
                 </span>
                 <Icons.Sparkles size={14} className="animate-pulse" />
               </div>
@@ -272,7 +272,7 @@ export const Rewards: React.FC<RewardsProps> = ({
                   <span>Instant Payout</span>
                 </div>
                 <p className="text-zinc-400 text-[10px] leading-relaxed">
-                  Prizes credit immediately to your chix9ja account with zero delay.
+                  Prizes credit immediately to your 9jacash account with zero delay.
                 </p>
               </div>
             </div>

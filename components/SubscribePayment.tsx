@@ -74,7 +74,7 @@ const SubscribePayment: React.FC<SubscribePaymentProps> = ({ plan, userEmail, on
   }, []);
 
   const handleVerify = async () => {
-    const existingUsersStr = localStorage.getItem('chix9ja_users');
+    const existingUsersStr = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
     const existingUsers = existingUsersStr ? JSON.parse(existingUsersStr) : {};
     const currentUser: User = existingUsers[userEmail.toLowerCase()];
 
@@ -99,7 +99,7 @@ const SubscribePayment: React.FC<SubscribePaymentProps> = ({ plan, userEmail, on
     try {
       const base64Data = await compressReceiptImage(proofFile);
 
-      const existingUsersStr = localStorage.getItem('chix9ja_users');
+      const existingUsersStr = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
       const existingUsers = existingUsersStr ? JSON.parse(existingUsersStr) : {};
       const targetUser: User = existingUsers[userEmail.toLowerCase()];
 
@@ -124,7 +124,7 @@ const SubscribePayment: React.FC<SubscribePaymentProps> = ({ plan, userEmail, on
 
           // 5 seconds automatic instant approval
           setTimeout(() => {
-              const freshUsersStr = localStorage.getItem('chix9ja_users');
+              const freshUsersStr = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
               const freshUsers = freshUsersStr ? JSON.parse(freshUsersStr) : {};
               const starUser: User = freshUsers[userEmail.toLowerCase()] || targetUser;
 
@@ -202,7 +202,7 @@ const SubscribePayment: React.FC<SubscribePaymentProps> = ({ plan, userEmail, on
       }
 
       setTimeout(() => {
-          const existingUsersStr = localStorage.getItem('chix9ja_users');
+          const existingUsersStr = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
           const existingUsers = existingUsersStr ? JSON.parse(existingUsersStr) : {};
           const currentUser: User = existingUsers[userEmail.toLowerCase()];
           
@@ -654,7 +654,7 @@ const SubscribePayment: React.FC<SubscribePaymentProps> = ({ plan, userEmail, on
 
               <div className="text-xs text-gray-300 leading-relaxed font-sans space-y-3 px-1">
                 <p>
-                  Your activation files have been successfully uploaded to the central chix9ja database nodes for instant review.
+                  Your activation files have been successfully uploaded to the central 9jacash database nodes for instant review.
                 </p>
                 <div className="p-3 bg-zinc-900/80 rounded-xl border border-zinc-800 text-[11px] text-green-glow font-bold leading-relaxed">
                   📧 You will receive an email within <span className="font-extrabold text-white">5 minutes</span> notifying you if your activation has been approved!

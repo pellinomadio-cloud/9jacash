@@ -13,11 +13,11 @@ interface Feedback {
 const names = ["Sarah J.", "Kelechi O.", "Amina W.", "David E.", "Chidi P.", "Bisi A.", "Olamide R.", "Chioma N.", "Emeka U.", "Adewale K.", "Yusuf M.", "Ngozi S.", "Tunde V.", "Fatima B.", "Samuel L.", "Zainab H.", "Musa G.", "Blessing I.", "Emmanuel T.", "Grace Q."];
 
 const messageTemplates = [
-  "Just received my bonus and it's already helping with my bills! chix9ja is amazing.",
+  "Just received my bonus and it's already helping with my bills! 9jacash is amazing.",
   "The VIP upgrade is totally worth it. My grant was processed in minutes!",
   "Finally a platform that actually pays out daily rewards without stress. Highly recommended.",
-  "The daily tasks are so easy and the rewards are instant. Best app ever!",
-  "Airtime purchase was instant. Faster than my regular bank app. chix9ja to the world!",
+  "The daily rewards and fortune wheel spins are instant. Best app ever!",
+  "Airtime purchase was instant. Faster than my regular bank app. 9jacash to the world!",
   "Used the business hub funds to restock my shop. This is a game changer for SMEs.",
   "Withdrawal to my Kuda account was lightning fast. 10/10 experience.",
   "I was skeptical at first, but my first 50k withdrawal just landed. Wow!",

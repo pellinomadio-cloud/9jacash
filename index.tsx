@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { initGlobalButtonSound } from './components/casino/CasinoAudio';
+import { initGlobalButtonSound } from './components/AudioEngine';
 
-// Initialize universal button click sound across all of chix9ja app
+// Initialize universal button click sound across all of 9jacash app
 initGlobalButtonSound();
 
 // Register standard PWA service worker

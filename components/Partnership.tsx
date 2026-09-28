@@ -27,7 +27,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [formError, setFormError] = useState('');
 
-  const vendorUrl = vendorTelegramLink || 'https://t.me/chix9ja_vendor';
+  const vendorUrl = vendorTelegramLink || 'https://t.me/ninejacash_vendor';
 
   const isSubscribed = Boolean(user.isSubscribed);
   const hasApplication = Boolean(user.partnershipApplication);
@@ -50,7 +50,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
                 <Icons.Handshake size={18} className="text-amber-400" />
                 Partnership
               </h1>
-              <p className="text-[11px] text-zinc-400">Chix9ja Partner Program</p>
+              <p className="text-[11px] text-zinc-400">9jacash Partner Program</p>
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
             </h2>
             <div className="p-4 bg-zinc-900/80 border border-red-500/30 rounded-2xl">
               <p className="text-sm font-medium text-zinc-300 leading-relaxed">
-                Your Chix9ja account has not matched the qualifications to partner.
+                Your 9jacash account has not matched the qualifications to partner.
               </p>
             </div>
           </div>
@@ -143,11 +143,11 @@ export const Partnership: React.FC<PartnershipProps> = ({
               <Icons.Handshake size={18} className="text-amber-400" />
               Partnership Program
             </h1>
-            <p className="text-[11px] text-zinc-400">Official Chix9ja Brand Ambassador Network</p>
+            <p className="text-[11px] text-zinc-400">Official 9jacash Brand Ambassador Network</p>
           </div>
         </div>
         <span className="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full text-[10px] font-mono font-black uppercase tracking-wider">
-          EARN WITH CHIX9JA
+          EARN WITH 9JACASH
         </span>
       </div>
 
@@ -165,7 +165,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
                   EXCLUSIVE OPPORTUNITY
                 </span>
                 <h2 className="text-lg font-black text-white tracking-tight leading-snug">
-                  Become an Official Chix9ja Partner
+                  Become an Official 9jacash Partner
                 </h2>
               </div>
             </div>
@@ -230,7 +230,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
                     )}
                   </div>
                   <p className="text-[11px] text-zinc-400 leading-relaxed">
-                    Only verified subscribed members are eligible to hold a Chix9ja partnership badge and receive partner commission payouts.
+                    Only verified subscribed members are eligible to hold a 9jacash partnership badge and receive partner commission payouts.
                   </p>
                   {isSubscribed && (
                     <p className="text-[11px] font-mono text-emerald-400 font-semibold pt-0.5">
@@ -272,7 +272,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
                   )}
                 </div>
                 <p className="text-[11px] text-zinc-400 leading-relaxed">
-                  You must create an active public or private channel (e.g. Telegram Channel, WhatsApp Group/Channel, YouTube, or TikTok) where you will regularly promote Chix9ja and share proof of payments.
+                  You must create an active public or private channel (e.g. Telegram Channel, WhatsApp Group/Channel, YouTube, or TikTok) where you will regularly promote 9jacash and share proof of payments.
                 </p>
               </div>
             </div>
@@ -292,7 +292,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-400 leading-relaxed">
-                  Contact an official Chix9ja Verified Vendor on Telegram. The vendor will inspect your channel, give you the complete partnership rules & promotional banner packs, and authorize your partner rate.
+                  Contact an official 9jacash Verified Vendor on Telegram. The vendor will inspect your channel, give you the complete partnership rules & promotional banner packs, and authorize your partner rate.
                 </p>
               </div>
             </div>
@@ -377,7 +377,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
               {hasApplication ? 'Update Channel Application' : 'Apply for Partnership'}
             </h3>
             <p className="text-xs text-zinc-400">
-              Provide the details of the promotional channel you created to promote Chix9ja.
+              Provide the details of the promotional channel you created to promote 9jacash.
             </p>
           </div>
 
@@ -426,7 +426,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
                 type="text"
                 value={channelName}
                 onChange={(e) => setChannelName(e.target.value)}
-                placeholder="e.g. Chix9ja Earners Club, Wealth Builders Hub"
+                placeholder="e.g. 9jacash Earners Club, Wealth Builders Hub"
                 className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 transition-colors"
                 required
               />
@@ -488,7 +488,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
-                placeholder="Briefly describe how you plan to promote Chix9ja (daily posts, proof videos, etc.)"
+                placeholder="Briefly describe how you plan to promote 9jacash (daily posts, proof videos, etc.)"
                 className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400 transition-colors resize-none"
               />
             </div>
@@ -534,7 +534,7 @@ export const Partnership: React.FC<PartnershipProps> = ({
           <div className="space-y-2.5 text-xs text-zinc-400 leading-relaxed">
             <div className="flex items-start space-x-2.5">
               <span className="w-5 h-5 rounded-full bg-zinc-800 text-amber-400 font-mono text-[10px] flex items-center justify-center flex-shrink-0 font-bold">1</span>
-              <p><strong className="text-zinc-200">Continuous Promotion:</strong> Post verified Chix9ja banners, withdrawal receipts, and announcements at least once every 48 hours in your channel.</p>
+              <p><strong className="text-zinc-200">Continuous Promotion:</strong> Post verified 9jacash banners, withdrawal receipts, and announcements at least once every 48 hours in your channel.</p>
             </div>
             <div className="flex items-start space-x-2.5">
               <span className="w-5 h-5 rounded-full bg-zinc-800 text-amber-400 font-mono text-[10px] flex items-center justify-center flex-shrink-0 font-bold">2</span>

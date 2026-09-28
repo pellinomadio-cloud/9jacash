@@ -14,8 +14,8 @@ const Restricted: React.FC<RestrictedProps> = ({ customRecoveryCode, onRestore, 
 
   const handleVerifyCode = () => {
     const entered = code.trim().toUpperCase();
-    const target = (customRecoveryCode || 'CHI999').trim().toUpperCase();
-    if (entered === target || entered === 'CHI999' || entered === 'CHIX9JA999') {
+    const target = (customRecoveryCode || '9JA999').trim().toUpperCase();
+    if (entered === target || entered === '9JA999') {
       onRestore();
     } else {
       setError(true);
@@ -24,7 +24,7 @@ const Restricted: React.FC<RestrictedProps> = ({ customRecoveryCode, onRestore, 
     }
   };
 
-  const vendorUrl = vendorTelegramLink || "https://t.me/chix9ja_vendor";
+  const vendorUrl = vendorTelegramLink || "https://t.me/9jacash_vendor";
 
   return (
     <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700 overflow-y-auto">
@@ -87,7 +87,7 @@ const Restricted: React.FC<RestrictedProps> = ({ customRecoveryCode, onRestore, 
       </div>
 
       <p className="mt-6 text-[9px] text-gray-600 font-bold uppercase tracking-widest mb-4 flex-shrink-0">
-        CHIX9JA SECURE VALIDATION SYSTEM v2.0
+        9JACASH SECURE VALIDATION SYSTEM v2.0
       </p>
     </div>
   );

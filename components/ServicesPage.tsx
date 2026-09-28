@@ -32,17 +32,6 @@ const ServicesPage: React.FC<ServicesPageProps> = ({ user, onActionClick, onBack
         { id: "promo", label: "Promo Deals", icon: Icons.Gift, color: "text-[#008751]", bg: "bg-emerald-50", badge: "HOT", desc: "Exclusive promotional perks & bonuses" },
         { id: "referrals", label: "Refer & Earn", icon: Icons.Users, color: "text-teal-600", bg: "bg-teal-50", badge: "₦15,000", desc: "Earn for inviting friends" },
         { id: "rewards", label: "Rewards & Spin", icon: Icons.Reward, color: "text-amber-500", bg: "bg-amber-50", desc: "Spin fortune wheel daily" },
-        { id: "tasks", label: "Daily Tasks", icon: Icons.Calendar, color: "text-orange-600", bg: "bg-orange-50", desc: "Complete tasks for cash" },
-        { id: "quiz_game", label: "Gaming Hub", icon: Icons.Gamepad2, color: "text-fuchsia-600", bg: "bg-fuchsia-50", desc: "Play trivia quiz to win" },
-      ]
-    },
-    {
-      title: "Community & Membership",
-      items: [
-        { id: "community", label: "Message Service", icon: Icons.MessageSquare, color: "text-emerald-600", bg: "bg-emerald-50", desc: "Chat with active members" },
-        { id: "invest", label: "Investment", icon: Icons.Invest, color: "text-indigo-600", bg: "bg-indigo-50", desc: "Fixed return yield programs" },
-        { id: "upgrade", label: "VIP Club", icon: Icons.Upgrade, color: "text-amber-600", bg: "bg-amber-50", desc: "Priority support and limits" },
-        { id: "advertise", label: "Advertise", icon: Icons.Megaphone, color: "text-rose-600", bg: "bg-rose-50", desc: "Place sponsored banner ads" },
       ]
     }
   ];

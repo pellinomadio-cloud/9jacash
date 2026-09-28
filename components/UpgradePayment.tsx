@@ -87,7 +87,7 @@ const UpgradePayment: React.FC<UpgradePaymentProps> = ({
   }, []);
 
   const handleVerify = async () => {
-    const existingUsersStr = localStorage.getItem('chix9ja_users');
+    const existingUsersStr = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
     const existingUsers = existingUsersStr ? JSON.parse(existingUsersStr) : {};
     const currentUser: User = existingUsers[userEmail.toLowerCase()];
 
@@ -118,7 +118,7 @@ const UpgradePayment: React.FC<UpgradePaymentProps> = ({
       const base64Data = await compressReceiptImage(proofFile);
 
       setTimeout(() => {
-        const freshUsersStr = localStorage.getItem('chix9ja_users');
+        const freshUsersStr = (localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users"));
         const freshUsers = freshUsersStr ? JSON.parse(freshUsersStr) : {};
         const freshUser: User = freshUsers[userEmail.toLowerCase()];
         
@@ -212,7 +212,7 @@ const UpgradePayment: React.FC<UpgradePaymentProps> = ({
     );
   }
 
-  const existingUsersTemp = JSON.parse(localStorage.getItem('chix9ja_users') || '{}');
+  const existingUsersTemp = JSON.parse((localStorage.getItem("9jacash_users") || localStorage.getItem("chix9ja_users")) || '{}');
   const currentUserTemp: User = existingUsersTemp[userEmail.toLowerCase()] || user;
 
   if (currentUserTemp && !currentUserTemp.isSubscribed) {
@@ -265,7 +265,7 @@ const UpgradePayment: React.FC<UpgradePaymentProps> = ({
               Confirm VIP Status
             </h1>
             <p className="text-[10px] font-bold text-amber-400 tracking-wider uppercase font-mono">
-              Chix9ja Official Payment Node
+              9jacash Official Payment Node
             </p>
           </div>
           <div className="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">

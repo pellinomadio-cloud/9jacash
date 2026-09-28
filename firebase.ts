@@ -54,13 +54,14 @@ const DEFAULT_GIVEAWAY: GiveawayStatus = {
 // Local storage event emitter for cross-component reactive updates
 const dispatchLocalUpdate = (key: string) => {
   if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('9jacash_local_store_updated', { detail: { key } }));
     window.dispatchEvent(new CustomEvent('chix9ja_local_store_updated', { detail: { key } }));
   }
 };
 
 export const fetchConfirmedBankDetails = async (): Promise<BankDetails> => {
   try {
-    const raw = localStorage.getItem('chix9ja_bank_details');
+    const raw = (localStorage.getItem('9jacash_bank_details') || localStorage.getItem('chix9ja_bank_details'));
     if (raw) return JSON.parse(raw);
   } catch (e) {
     console.error('Error fetching local bank details:', e);
@@ -71,7 +72,7 @@ export const fetchConfirmedBankDetails = async (): Promise<BankDetails> => {
 export const useBankDetails = () => {
   const [bankDetails, setBankDetails] = useState<BankDetails>(() => {
     try {
-      const raw = localStorage.getItem('chix9ja_bank_details');
+      const raw = (localStorage.getItem('9jacash_bank_details') || localStorage.getItem('chix9ja_bank_details'));
       if (raw) return JSON.parse(raw);
     } catch {}
     return DEFAULT_BANK_DETAILS;
@@ -81,13 +82,15 @@ export const useBankDetails = () => {
     const handleUpdate = (e: any) => {
       if (!e.detail?.key || e.detail.key === 'bank_details') {
         try {
-          const raw = localStorage.getItem('chix9ja_bank_details');
+          const raw = (localStorage.getItem('9jacash_bank_details') || localStorage.getItem('chix9ja_bank_details'));
           if (raw) setBankDetails(JSON.parse(raw));
         } catch {}
       }
     };
+    window.addEventListener('9jacash_local_store_updated', handleUpdate);
     window.addEventListener('chix9ja_local_store_updated', handleUpdate);
-    return () => window.removeEventListener('chix9ja_local_store_updated', handleUpdate);
+    return () => window.removeEventListener('9jacash_local_store_updated', handleUpdate);
+    window.removeEventListener('chix9ja_local_store_updated', handleUpdate);
   }, []);
 
   return { bankDetails, loading: false };
@@ -107,7 +110,7 @@ export const updateBankDetails = async (details: Partial<BankDetails>) => {
 export const useGiveawayStatus = () => {
   const [giveawayStatus, setGiveawayStatus] = useState<GiveawayStatus>(() => {
     try {
-      const raw = localStorage.getItem('chix9ja_giveaway');
+      const raw = (localStorage.getItem('9jacash_giveaway') || localStorage.getItem('chix9ja_giveaway'));
       if (raw) return JSON.parse(raw);
     } catch {}
     return DEFAULT_GIVEAWAY;
@@ -117,13 +120,15 @@ export const useGiveawayStatus = () => {
     const handleUpdate = (e: any) => {
       if (!e.detail?.key || e.detail.key === 'giveaway') {
         try {
-          const raw = localStorage.getItem('chix9ja_giveaway');
+          const raw = (localStorage.getItem('9jacash_giveaway') || localStorage.getItem('chix9ja_giveaway'));
           if (raw) setGiveawayStatus(JSON.parse(raw));
         } catch {}
       }
     };
+    window.addEventListener('9jacash_local_store_updated', handleUpdate);
     window.addEventListener('chix9ja_local_store_updated', handleUpdate);
-    return () => window.removeEventListener('chix9ja_local_store_updated', handleUpdate);
+    return () => window.removeEventListener('9jacash_local_store_updated', handleUpdate);
+    window.removeEventListener('chix9ja_local_store_updated', handleUpdate);
   }, []);
 
   return { giveawayStatus, unlocked: giveawayStatus.isActive, loading: false };
@@ -131,7 +136,7 @@ export const useGiveawayStatus = () => {
 
 export const updateGiveawayStatus = async (status: boolean | Partial<GiveawayStatus>) => {
   try {
-    const raw = localStorage.getItem('chix9ja_giveaway');
+    const raw = (localStorage.getItem('9jacash_giveaway') || localStorage.getItem('chix9ja_giveaway'));
     const current = raw ? JSON.parse(raw) : DEFAULT_GIVEAWAY;
     const patch = typeof status === 'boolean' ? { isActive: status } : status;
     const updated = { ...current, ...patch };
@@ -145,7 +150,7 @@ export const updateGiveawayStatus = async (status: boolean | Partial<GiveawaySta
 export const useAppChannels = () => {
   const [channels, setChannels] = useState<AppChannels>(() => {
     try {
-      const raw = localStorage.getItem('chix9ja_channels');
+      const raw = (localStorage.getItem('9jacash_channels') || localStorage.getItem('chix9ja_channels'));
       if (raw) return { ...DEFAULT_CHANNELS, ...JSON.parse(raw) };
     } catch {}
     return DEFAULT_CHANNELS;
@@ -155,13 +160,15 @@ export const useAppChannels = () => {
     const handleUpdate = (e: any) => {
       if (!e.detail?.key || e.detail.key === 'channels') {
         try {
-          const raw = localStorage.getItem('chix9ja_channels');
+          const raw = (localStorage.getItem('9jacash_channels') || localStorage.getItem('chix9ja_channels'));
           if (raw) setChannels({ ...DEFAULT_CHANNELS, ...JSON.parse(raw) });
         } catch {}
       }
     };
+    window.addEventListener('9jacash_local_store_updated', handleUpdate);
     window.addEventListener('chix9ja_local_store_updated', handleUpdate);
-    return () => window.removeEventListener('chix9ja_local_store_updated', handleUpdate);
+    return () => window.removeEventListener('9jacash_local_store_updated', handleUpdate);
+    window.removeEventListener('chix9ja_local_store_updated', handleUpdate);
   }, []);
 
   return { channels };
@@ -169,7 +176,7 @@ export const useAppChannels = () => {
 
 export const updateAppChannels = async (newChannels: Partial<AppChannels>) => {
   try {
-    const raw = localStorage.getItem('chix9ja_channels');
+    const raw = (localStorage.getItem('9jacash_channels') || localStorage.getItem('chix9ja_channels'));
     const current = raw ? JSON.parse(raw) : DEFAULT_CHANNELS;
     const updated = { ...current, ...newChannels };
     localStorage.setItem('chix9ja_channels', JSON.stringify(updated));
@@ -186,12 +193,13 @@ export const syncUserFromLocalToFirestore = async (userOrEmail: any, maybeUserOr
 
   try {
     const emailKey = targetEmail.toLowerCase().trim();
-    const raw = localStorage.getItem('chix9ja_users');
+    const raw = (localStorage.getItem('9jacash_users') || localStorage.getItem('chix9ja_users'));
     const users = raw ? JSON.parse(raw) : {};
     if (targetUser) {
       users[emailKey] = { ...(users[emailKey] || {}), ...targetUser };
     }
     localStorage.setItem('chix9ja_users', JSON.stringify(users));
+    localStorage.setItem('9jacash_active_session', emailKey);
     localStorage.setItem('chix9ja_active_session', emailKey);
     dispatchLocalUpdate('users');
   } catch (e) {
@@ -201,7 +209,7 @@ export const syncUserFromLocalToFirestore = async (userOrEmail: any, maybeUserOr
 
 export const recordPaymentProof = async (proof: any) => {
   try {
-    const raw = localStorage.getItem('chix9ja_payment_proofs');
+    const raw = (localStorage.getItem('9jacash_payment_proofs') || localStorage.getItem('chix9ja_payment_proofs'));
     const proofs = raw ? JSON.parse(raw) : [];
     proofs.unshift({ id: `proof_${Date.now()}`, ...proof, timestamp: Date.now() });
     localStorage.setItem('chix9ja_payment_proofs', JSON.stringify(proofs));
@@ -234,7 +242,7 @@ export const auth: any = {
   currentUser: null,
   onAuthStateChanged: (cb: (user: any) => void) => {
     try {
-      const activeEmail = localStorage.getItem('chix9ja_active_session');
+      const activeEmail = (localStorage.getItem('9jacash_active_session') || localStorage.getItem('chix9ja_active_session'));
       if (activeEmail) {
         cb({ email: activeEmail, uid: activeEmail });
       } else {
@@ -246,6 +254,7 @@ export const auth: any = {
     return () => {};
   },
   signOut: async () => {
+    localStorage.removeItem('9jacash_active_session');
     localStorage.removeItem('chix9ja_active_session');
     dispatchLocalUpdate('auth');
   }
@@ -263,7 +272,7 @@ export const collection = (database: any, collectionName: string) => ({
 export const getDoc = async (docRef: any) => {
   try {
     if (docRef.collectionName === 'users') {
-      const raw = localStorage.getItem('chix9ja_users');
+      const raw = (localStorage.getItem('9jacash_users') || localStorage.getItem('chix9ja_users'));
       const users = raw ? JSON.parse(raw) : {};
       const userData = users[docRef.docId?.toLowerCase()];
       return {
@@ -273,7 +282,7 @@ export const getDoc = async (docRef: any) => {
       };
     }
     if (docRef.collectionName === 'app_settings') {
-      const raw = localStorage.getItem(`chix9ja_app_settings_${docRef.docId}`);
+      const raw = (localStorage.getItem(`9jacash_app_settings_${docRef.docId}`) || localStorage.getItem(`chix9ja_app_settings_${docRef.docId}`));
       let data = raw ? JSON.parse(raw) : null;
       if (!data) {
         if (docRef.docId === 'channels') data = DEFAULT_CHANNELS;
@@ -286,7 +295,7 @@ export const getDoc = async (docRef: any) => {
         id: docRef.docId
       };
     }
-    const raw = localStorage.getItem(`chix9ja_${docRef.collectionName}_${docRef.docId}`);
+    const raw = (localStorage.getItem(`9jacash_${docRef.collectionName}_${docRef.docId}`) || localStorage.getItem(`chix9ja_${docRef.collectionName}_${docRef.docId}`));
     const data = raw ? JSON.parse(raw) : null;
     return {
       exists: () => Boolean(data),
@@ -301,7 +310,7 @@ export const getDoc = async (docRef: any) => {
 export const setDoc = async (docRef: any, data: any, options?: any) => {
   try {
     if (docRef.collectionName === 'users') {
-      const raw = localStorage.getItem('chix9ja_users');
+      const raw = (localStorage.getItem('9jacash_users') || localStorage.getItem('chix9ja_users'));
       const users = raw ? JSON.parse(raw) : {};
       const existing = users[docRef.docId.toLowerCase()] || {};
       users[docRef.docId.toLowerCase()] = options?.merge ? { ...existing, ...data } : data;
@@ -323,13 +332,14 @@ export const updateDoc = async (docRef: any, data: any) => {
 export const deleteDoc = async (docRef: any) => {
   try {
     if (docRef.collectionName === 'users') {
-      const raw = localStorage.getItem('chix9ja_users');
+      const raw = (localStorage.getItem('9jacash_users') || localStorage.getItem('chix9ja_users'));
       const users = raw ? JSON.parse(raw) : {};
       delete users[docRef.docId.toLowerCase()];
       localStorage.setItem('chix9ja_users', JSON.stringify(users));
       dispatchLocalUpdate('users');
       return;
     }
+    localStorage.removeItem(`9jacash_${docRef.collectionName}_${docRef.docId}`);
     localStorage.removeItem(`chix9ja_${docRef.collectionName}_${docRef.docId}`);
     dispatchLocalUpdate(docRef.collectionName);
   } catch (e) {
@@ -358,7 +368,7 @@ export const getDocs = async (queryOrCol: any) => {
   let items: any[] = [];
   try {
     if (colName === 'users') {
-      const raw = localStorage.getItem('chix9ja_users');
+      const raw = (localStorage.getItem('9jacash_users') || localStorage.getItem('chix9ja_users'));
       const users = raw ? JSON.parse(raw) : {};
       items = Object.values(users);
     } else {
@@ -395,8 +405,10 @@ export const onSnapshot = (ref: any, onNext: (snap: any) => void, onError?: (err
   };
   check();
   const listener = () => check();
-  window.addEventListener('chix9ja_local_store_updated', listener);
-  return () => window.removeEventListener('chix9ja_local_store_updated', listener);
+  window.addEventListener('9jacash_local_store_updated', listener);
+    window.addEventListener('chix9ja_local_store_updated', listener);
+  return () => window.removeEventListener('9jacash_local_store_updated', listener);
+    window.removeEventListener('chix9ja_local_store_updated', listener);
 };
 
 export const query = (colRef: any, ...args: any[]) => ({ colRef, args, collectionName: colRef.collectionName });
@@ -406,7 +418,7 @@ export const limit = (n: number) => ({ type: 'limit', n });
 export const serverTimestamp = () => new Date().toISOString();
 
 export const signInWithEmailAndPassword = async (authInstance: any, email: string, pass: string) => {
-  const raw = localStorage.getItem('chix9ja_users');
+  const raw = (localStorage.getItem('9jacash_users') || localStorage.getItem('chix9ja_users'));
   const users = raw ? JSON.parse(raw) : {};
   const emailKey = email.toLowerCase().trim();
   const found = users[emailKey];
@@ -430,14 +442,16 @@ export const signInWithEmailAndPassword = async (authInstance: any, email: strin
     users[emailKey] = newUser;
     localStorage.setItem('chix9ja_users', JSON.stringify(users));
   }
-  localStorage.setItem('chix9ja_active_session', emailKey);
+  localStorage.setItem('9jacash_active_session', emailKey);
+    localStorage.setItem('chix9ja_active_session', emailKey);
   dispatchLocalUpdate('auth');
   return { user: { email: emailKey } };
 };
 
 export const createUserWithEmailAndPassword = async (authInstance: any, email: string, pass: string) => {
   const emailKey = email.toLowerCase().trim();
-  localStorage.setItem('chix9ja_active_session', emailKey);
+  localStorage.setItem('9jacash_active_session', emailKey);
+    localStorage.setItem('chix9ja_active_session', emailKey);
   dispatchLocalUpdate('auth');
   return { user: { email: emailKey } };
 };

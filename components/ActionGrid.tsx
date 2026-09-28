@@ -55,10 +55,6 @@ const ActionGrid: React.FC<ActionGridProps> = ({
     { id: 'transfer', label: 'Transfer', icon: Icons.ArrowLeftRight, color: 'text-blue-600', bg: 'bg-blue-50' },
     { id: 'referrals', label: 'Refer & Earn', icon: Icons.Users, color: 'text-teal-600', bg: 'bg-teal-50', badge: '₦15k' },
     { id: 'rewards', label: 'Rewards', icon: Icons.Reward, color: 'text-amber-500', bg: 'bg-amber-50', badge: 'Spin' },
-    { id: 'tasks', label: 'Daily Tasks', icon: Icons.Calendar, color: 'text-orange-500', bg: 'bg-orange-50' },
-    { id: 'invest', label: 'Invest', icon: Icons.Invest, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-    { id: 'quiz_game', label: 'Gaming Hub', icon: Icons.Gamepad2, color: 'text-fuchsia-600', bg: 'bg-fuchsia-50' },
-    { id: 'advertise', label: 'Advertise', icon: Icons.Megaphone, color: 'text-rose-600', bg: 'bg-rose-50' },
   ];
 
   const handleViewAllToggle = () => {

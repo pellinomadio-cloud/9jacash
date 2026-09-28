@@ -31,10 +31,12 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
     }
     
     const emailKey = email.toLowerCase().trim();
-    const securePassword = `${password}_chix9ja_secure_salt`;
+    const primaryPassword = `${password}_9jacash_secure_salt`;
+    const fallbackPassword = `${password}_chix9ja_secure_salt`;
 
-    signInWithEmailAndPassword(auth, emailKey, securePassword)
-      .then(async () => {
+    const attemptLogin = async (passToTry: string, isRetry = false) => {
+      try {
+        await signInWithEmailAndPassword(auth, emailKey, passToTry);
         try {
           const userDoc = await getDoc(doc(db, 'users', emailKey));
           if (userDoc.exists()) {
@@ -48,15 +50,21 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
           setError(err.message || 'Error loading profile from database.');
         }
         setIsLoading(false);
-      })
-      .catch((err: any) => {
+      } catch (err: any) {
+        if (!isRetry && (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential')) {
+          attemptLogin(fallbackPassword, true);
+          return;
+        }
         if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
           setError('Account not registered or invalid 4-digit PIN.');
         } else {
           setError(err.message || 'Error validating credentials.');
         }
         setIsLoading(false);
-      });
+      }
+    };
+
+    attemptLogin(primaryPassword);
   };
 
   return (
