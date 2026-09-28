@@ -237,7 +237,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin, defaul
                   type="text"
                   required
                   className="w-full pl-10 pr-3.5 py-3 bg-gray-50/70 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#013a24]/15 focus:border-[#013a24] focus:bg-white transition-all shadow-sm"
-                  placeholder="e.g. Pellino Madio"
+                  placeholder="e.g. Emmanuel Chukwuma"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />

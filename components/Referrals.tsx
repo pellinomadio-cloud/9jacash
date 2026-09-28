@@ -12,7 +12,10 @@ const Referrals: React.FC<ReferralsProps> = ({ user, onBack }) => {
   const [copiedLink, setCopiedLink] = useState(false);
 
   const referralCode = user.referralCode || user.email.split('@')[0].toUpperCase();
-  const referralLink = `https://9jacash.online?ref=${referralCode}`;
+  const currentOrigin = typeof window !== 'undefined' && window.location?.origin && window.location.origin !== 'null'
+    ? window.location.origin
+    : 'https://9jacash.online';
+  const referralLink = `${currentOrigin}?ref=${referralCode}`;
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(referralCode)

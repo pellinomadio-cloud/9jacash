@@ -18,7 +18,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ 
-  userName = "Pellino", 
+  userName = "Member", 
   profileImage, 
   onLogout,
   showBack = false,

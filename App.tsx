@@ -239,6 +239,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (initialRefCode) {
+      setUser(null);
       setCurrentView("register");
     }
   }, [initialRefCode]);
@@ -263,6 +264,12 @@ const App: React.FC = () => {
   // Initialize User State from LocalStorage (Persistence)
   const [user, setUser] = useState<User | null>(() => {
     try {
+      const params = new URLSearchParams(window.location.search);
+      // If visiting via a referral invitation (?ref=...) or explicit registration param,
+      // the visitor is a new user who must register first. Do NOT restore previous session.
+      if (params.get("ref") || params.get("register") === "true") {
+        return null;
+      }
       const activeEmail = (localStorage.getItem("9jacash_active_session") || localStorage.getItem("chix9ja_active_session"));
       if (activeEmail) {
         const users = getStoredUsers();
@@ -377,6 +384,13 @@ const App: React.FC = () => {
 
   // Real-time synchronization effect using Firebase Auth state & Firestore subscription
   useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("ref") || params.get("register") === "true") {
+        return;
+      }
+    } catch {}
+
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser?.email) {
         const emailKey = authUser.email.toLowerCase().trim();
@@ -603,6 +617,10 @@ const App: React.FC = () => {
       const params = new URLSearchParams(window.location.search);
       if ((params.get("transaction_id") || params.get("id")) && params.get("status")) {
         return "payment-callback";
+      }
+      // If arriving via referral code or register link, ALWAYS open Register!
+      if (params.get("ref") || params.get("register") === "true") {
+        return "register";
       }
       const activeEmail = (localStorage.getItem("9jacash_active_session") || localStorage.getItem("chix9ja_active_session"));
       if (activeEmail) {
@@ -1888,13 +1906,16 @@ const App: React.FC = () => {
     );
   }
 
-  if (!user) {
+  if (!user || currentView === "register" || currentView === "login") {
     if (currentView === "login") {
       return (
         <div className={darkMode ? "dark" : ""}>
           <Login
             onLogin={handleLogin}
-            onSwitchToRegister={() => setCurrentView("register")}
+            onSwitchToRegister={() => {
+              setUser(null);
+              setCurrentView("register");
+            }}
           />
         </div>
       );
@@ -1903,7 +1924,10 @@ const App: React.FC = () => {
       <div className={darkMode ? "dark" : ""}>
         <Register
           onRegister={handleRegister}
-          onSwitchToLogin={() => setCurrentView("login")}
+          onSwitchToLogin={() => {
+            setUser(null);
+            setCurrentView("login");
+          }}
           defaultReferralCode={initialRefCode}
         />
       </div>
@@ -2125,7 +2149,7 @@ const App: React.FC = () => {
                 {/* Unified Forest Green Top Section matching Uploaded Image */}
                 <div className="bg-[#013a24] pt-2 pb-6 px-4 rounded-b-[2.2rem] shadow-sm text-white">
                   <Header
-                    userName={user?.name || "Pellino"}
+                    userName={user?.name || "Member"}
                     profileImage={user?.profileImage}
                     onLogout={handleLogout}
                     showBack={false}

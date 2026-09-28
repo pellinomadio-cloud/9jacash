@@ -425,7 +425,7 @@ export const signInWithEmailAndPassword = async (authInstance: any, email: strin
   if (!found) {
     // If not found, create a demo user account automatically for instant access
     const newUser: User = {
-      name: 'Pellino',
+      name: emailKey.split('@')[0] || 'Member',
       email: emailKey,
       balance: 43000,
       transactions: [
